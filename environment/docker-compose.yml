@@ -1,0 +1,30 @@
+services:
+  sonarqube:
+    image: sonarqube:25.5.0.107428-community
+    container_name: kirjavik-sonarqube
+    ports:
+      - "34601:9000"
+  db:
+    image: mariadb:11.7.2
+    container_name: kirjavik-db
+    environment:
+      MYSQL_ROOT_PASSWORD: pass
+      MYSQL_DATABASE: kirjavik
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    volumes:
+      - data:/var/lib/mysql
+    ports:
+      - "34602:3306"
+  prometheus:
+    image: prom/prometheus:v3.4.0
+    container_name: kirjavik-prometheus
+    ports:
+      - "34603:9090"
+  grafana:
+    image: grafana/grafana:12.0.1-ubuntu
+    container_name: kirjavik-grafana
+    ports:
+      - "34604:3000"
+volumes:
+  data:

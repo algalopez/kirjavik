@@ -1,26 +1,17 @@
 plugins {
-    id 'java'
-    id 'io.quarkus'
+    id 'java' apply true
+    id 'io.quarkus' apply true
+    id 'org.sonarqube' version "6.2.0.5505" apply true
+    id 'jacoco'
 }
+
+group 'org.algalopez'
+version '1.0.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
     mavenLocal()
 }
-
-dependencies {
-    implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
-    implementation enforcedPlatform("${quarkusPlatformGroupId}:quarkus-cxf-bom:${quarkusPlatformVersion}")
-    implementation 'io.quarkiverse.cxf:quarkus-cxf'
-    implementation 'io.quarkus:quarkus-rest-jackson'
-    implementation 'io.quarkus:quarkus-arc'
-    implementation 'io.quarkus:quarkus-rest'
-    testImplementation 'io.quarkus:quarkus-junit5'
-    testImplementation 'io.rest-assured:rest-assured'
-}
-
-group 'org.algalopez'
-version '1.0.0-SNAPSHOT'
 
 java {
     sourceCompatibility = JavaVersion.VERSION_21
@@ -28,8 +19,11 @@ java {
 }
 
 test {
+    useJUnitPlatform()
     systemProperty "java.util.logging.manager", "org.jboss.logmanager.LogManager"
+    finalizedBy jacocoTestReport
 }
+
 compileJava {
     options.encoding = 'UTF-8'
     options.compilerArgs << '-parameters'
@@ -37,4 +31,54 @@ compileJava {
 
 compileTestJava {
     options.encoding = 'UTF-8'
+}
+
+jacocoTestReport {
+    reports {
+        xml.required = true
+        csv.required = false
+    }
+}
+
+dependencies {
+    implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
+    implementation enforcedPlatform("${quarkusPlatformGroupId}:quarkus-cxf-bom:${quarkusPlatformVersion}")
+    implementation 'io.quarkiverse.cxf:quarkus-cxf'
+    implementation 'io.quarkus:quarkus-rest-jackson'
+    implementation 'io.quarkus:quarkus-jdbc-mariadb'
+    implementation 'io.quarkus:quarkus-smallrye-openapi'
+    implementation 'io.quarkus:quarkus-arc'
+    implementation 'org.mapstruct:mapstruct:1.6.3'
+
+    compileOnly 'org.projectlombok:lombok:1.18.38'
+
+    annotationProcessor 'org.projectlombok:lombok:1.18.38'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
+
+    testImplementation 'io.quarkus:quarkus-junit5'
+    testImplementation 'io.quarkus:quarkus-junit5-mockito'
+    testImplementation 'io.rest-assured:rest-assured:5.5.2'
+    testImplementation 'org.assertj:assertj-core:3.27.3'
+    testImplementation 'net.datafaker:datafaker:2.4.3'
+    testImplementation 'com.tngtech.archunit:archunit-junit5:1.4.1'
+
+    testCompileOnly 'org.projectlombok:lombok:1.18.38'
+
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.38'
+}
+
+sonar {
+    properties {
+        property 'sonar.projectKey', 'org.algalopez.kirjavik'
+        property 'sonar.projectName', 'Kirjavik'
+        property 'sonar.projectVersion', version
+        property 'sonar.language', 'java'
+        property 'sonar.sources', 'src/main/java'
+        property 'sonar.tests', 'src/test/java'
+        property 'sonar.sourceEncoding', 'UTF-8'
+        property 'sonar.exclusions', '**/Application.java'
+        property 'sonar.coverage.exclusions', '**/Application.java'
+        property 'sonar.host.url', 'http://localhost:34601'
+        property 'sonar.login', 'sqa_6bc8ab6d2ee2006ac37d0fd80749a2c8597e4d1c'
+    }
 }

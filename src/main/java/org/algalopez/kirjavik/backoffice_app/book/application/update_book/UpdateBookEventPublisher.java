@@ -1,0 +1,35 @@
+package org.algalopez.kirjavik.backoffice_app.book.application.update_book;
+
+import jakarta.enterprise.context.ApplicationScoped;
+import lombok.RequiredArgsConstructor;
+import org.algalopez.kirjavik.backoffice_app.book.domain.event.BookUpdated;
+import org.algalopez.kirjavik.backoffice_app.book.domain.model.Book;
+import org.algalopez.kirjavik.shared.application.EventBusPort;
+import org.algalopez.kirjavik.shared.domain.service.DomainMetadataService;
+
+@RequiredArgsConstructor
+@ApplicationScoped
+public class UpdateBookEventPublisher {
+
+  private final DomainMetadataService domainMetadataService;
+  private final EventBusPort eventBusPort;
+
+  public void publishBookUpdatedEvent(Book book) {
+    BookUpdated bookUpdated =
+        BookUpdated.builder()
+            .eventId(domainMetadataService.generateEventId())
+            .eventType(BookUpdated.EVENT_TYPE)
+            .aggregateId(book.getId().toString())
+            .aggregateType(BookUpdated.AGGREGATE_TYPE)
+            .dateTime(domainMetadataService.generateEventDateTime())
+            .id(book.getId())
+            .isbn(book.getIsbn())
+            .title(book.getTitle())
+            .authors(book.getAuthors())
+            .pageCount(book.getPageCount())
+            .year(book.getYear())
+            .build();
+
+    eventBusPort.publish(bookUpdated);
+  }
+}
