@@ -1,0 +1,134 @@
+package com.algalopez.kirjavik.backoffice_app.book.infrastructure;
+
+import com.algalopez.kirjavik.backoffice_app.book.domain.port.BookViewRepositoryPort;
+import com.algalopez.kirjavik.backoffice_app.book.domain.view.BookView;
+import com.algalopez.kirjavik.backoffice_app.book.domain.view.BookViewSpec;
+import io.quarkus.hibernate.orm.PersistenceUnit;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.persistence.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import lombok.AllArgsConstructor;
+import org.hibernate.query.NativeQuery;
+
+@ApplicationScoped
+public class BookViewRepositoryAdapter implements BookViewRepositoryPort {
+
+  private final EntityManager entityManager;
+
+  public BookViewRepositoryAdapter(@PersistenceUnit("backoffice") EntityManager entityManager) {
+    this.entityManager = entityManager;
+  }
+
+  @Override
+  public List<BookView> findAllByFilter(BookViewSpec specification) {
+    BookViewSqlBuilder whereClause = BookViewSqlBuilder.build(specification.filters());
+
+    String sql =
+        """
+        SELECT id, isbn, title, authors, page_count AS pageCount, year
+        FROM book
+        """
+            + whereClause.sql;
+
+    Query query = entityManager.createNativeQuery(sql, Tuple.class);
+    for (Map.Entry<String, Object> entry : whereClause.parameters.entrySet()) {
+      query.setParameter(entry.getKey(), entry.getValue());
+    }
+    query
+        .unwrap(NativeQuery.class)
+        .addScalar("id", String.class)
+        .addScalar("isbn", String.class)
+        .addScalar("title", String.class)
+        .addScalar("authors", String.class)
+        .addScalar("pageCount", Integer.class)
+        .addScalar("year", Integer.class);
+
+    @SuppressWarnings("unchecked")
+    List<Tuple> rows = query.getResultList();
+
+    return rows.stream().map(BookViewRepositoryAdapter::mapToView).toList();
+  }
+
+  @Override
+  public BookView findById(UUID id) {
+    String sql =
+        """
+            SELECT id, isbn, title, authors, page_count AS pageCount, year
+            FROM book
+            WHERE id = :id""";
+    Query query = entityManager.createNativeQuery(sql, Tuple.class);
+    query.setParameter("id", id.toString());
+    query
+        .unwrap(NativeQuery.class)
+        .addScalar("id", String.class)
+        .addScalar("isbn", String.class)
+        .addScalar("title", String.class)
+        .addScalar("authors", String.class)
+        .addScalar("pageCount", Integer.class)
+        .addScalar("year", Integer.class);
+
+    @SuppressWarnings("unchecked")
+    Tuple tuple = ((NativeQuery<Tuple>) query).uniqueResult();
+
+    if (tuple == null) {
+      return null;
+    }
+    return mapToView(tuple);
+  }
+
+  @AllArgsConstructor
+  private static class BookViewSqlBuilder {
+
+    public final String sql;
+    public final Map<String, Object> parameters;
+
+    public static BookViewSqlBuilder build(List<BookViewSpec.Filter> filters) {
+      StringBuilder where = new StringBuilder("WHERE 1=1");
+      Map<String, Object> params = new HashMap<>();
+
+      int index = 0;
+      for (BookViewSpec.Filter filter : filters) {
+        String paramName = "param" + index++;
+
+        switch (filter.operator()) {
+          case EQUALS -> {
+            where.append(" AND ").append(filter.field()).append(" = :").append(paramName);
+            params.put(paramName, filter.value());
+          }
+          case GREATER_THAN -> {
+            where.append(" AND ").append(filter.field()).append(" > :").append(paramName);
+            params.put(paramName, Integer.parseInt(filter.value()));
+          }
+          case STARTS_WITH -> {
+            where.append(" AND ").append(filter.field()).append(" LIKE :").append(paramName);
+            params.put(paramName, filter.value() + "%");
+          }
+          default ->
+              throw new UnsupportedOperationException("Unsupported operator: " + filter.operator());
+        }
+      }
+
+      return new BookViewSqlBuilder(where.toString(), params);
+    }
+  }
+
+  private static BookView mapToView(Tuple tuple) {
+    String id = tuple.get("id", String.class);
+    String isbn = tuple.get("isbn", String.class);
+    String title = tuple.get("title", String.class);
+    String authors = tuple.get("authors", String.class);
+    Integer pageCount = tuple.get("pageCount", Integer.class);
+    Integer year = tuple.get("year", Integer.class);
+    return BookView.builder()
+        .id(UUID.fromString(id))
+        .isbn(isbn)
+        .title(title)
+        .authors(List.of(authors))
+        .pageCount(pageCount)
+        .year(year)
+        .build();
+  }
+}

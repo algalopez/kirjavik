@@ -5,7 +5,7 @@ plugins {
     id 'jacoco'
 }
 
-group 'org.algalopez'
+group 'com.algalopez'
 version '1.0.0-SNAPSHOT'
 
 repositories {
@@ -45,6 +45,7 @@ dependencies {
     implementation enforcedPlatform("${quarkusPlatformGroupId}:quarkus-cxf-bom:${quarkusPlatformVersion}")
     implementation 'io.quarkiverse.cxf:quarkus-cxf'
     implementation 'io.quarkus:quarkus-rest-jackson'
+    implementation("io.quarkus:quarkus-hibernate-orm")
     implementation 'io.quarkus:quarkus-jdbc-mariadb'
     implementation 'io.quarkus:quarkus-smallrye-openapi'
     implementation 'io.quarkus:quarkus-arc'
@@ -69,7 +70,7 @@ dependencies {
 
 sonar {
     properties {
-        property 'sonar.projectKey', 'org.algalopez.kirjavik'
+        property 'sonar.projectKey', 'com.algalopez.kirjavik'
         property 'sonar.projectName', 'Kirjavik'
         property 'sonar.projectVersion', version
         property 'sonar.language', 'java'
