@@ -4,6 +4,8 @@ services:
     container_name: kirjavik-sonarqube
     ports:
       - "34601:9000"
+    networks:
+      - kirjavik_network
   db:
     image: mariadb:11.7.2
     container_name: kirjavik-db
@@ -16,15 +18,24 @@ services:
       - data:/var/lib/mysql
     ports:
       - "34602:3306"
+    networks:
+      - kirjavik_network
   prometheus:
     image: prom/prometheus:v3.4.0
     container_name: kirjavik-prometheus
     ports:
       - "34603:9090"
+    networks:
+      - kirjavik_network
   grafana:
     image: grafana/grafana:12.0.1-ubuntu
     container_name: kirjavik-grafana
     ports:
       - "34604:3000"
+    networks:
+      - kirjavik_network
 volumes:
   data:
+networks:
+  kirjavik_network:
+    name: kirjavik_network

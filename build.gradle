@@ -1,12 +1,12 @@
 plugins {
-    id 'java' apply true
-    id 'io.quarkus' apply true
-    id 'org.sonarqube' version "6.2.0.5505" apply true
+    id 'java'
+    id 'io.quarkus'
+    id 'org.sonarqube' version "6.2.0.5505"
     id 'jacoco'
 }
 
-group 'com.algalopez'
-version '1.0.0-SNAPSHOT'
+group = 'com.algalopez'
+version = '1.0.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
@@ -83,3 +83,20 @@ sonar {
         property 'sonar.login', 'sqa_6bc8ab6d2ee2006ac37d0fd80749a2c8597e4d1c'
     }
 }
+
+def createFlywayTask(String taskName, String command, String contextDir, String descriptionText) {
+    tasks.register(taskName, Exec) {
+        group = 'Database'
+        description = descriptionText
+        commandLine 'docker', 'run', '--rm',
+                '-v', "${projectDir}/database:/database",
+                '--network', 'kirjavik_network',
+                'flyway/flyway:11.8.1-alpine',
+                "-configFiles=/database/${contextDir}/conf/flyway-${contextDir}.conf",
+                command
+    }
+}
+
+createFlywayTask('migrateBackoffice', 'migrate', 'backoffice', 'Migrate backoffice')
+createFlywayTask('migrateKirjavik', 'migrate', 'kirjavik', 'Migrate kirjavik')
+createFlywayTask('migrateStats', 'migrate', 'stats', 'Migrate stats')
