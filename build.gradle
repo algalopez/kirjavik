@@ -22,6 +22,10 @@ test {
     useJUnitPlatform()
     systemProperty "java.util.logging.manager", "org.jboss.logmanager.LogManager"
     finalizedBy jacocoTestReport
+    jacoco {
+        enabled = true
+        excludeClassLoaders = ["*QuarkusClassLoader"]
+    }
 }
 
 compileJava {
@@ -34,9 +38,11 @@ compileTestJava {
 }
 
 jacocoTestReport {
+    dependsOn test
+    executionData file("${projectDir}/build/jacoco-quarkus.exec")
     reports {
         xml.required = true
-        csv.required = false
+        html.required = true
     }
 }
 
@@ -58,6 +64,7 @@ dependencies {
 
     testImplementation 'io.quarkus:quarkus-junit5'
     testImplementation 'io.quarkus:quarkus-junit5-mockito'
+    testImplementation 'io.quarkus:quarkus-jacoco'
     testImplementation 'io.rest-assured:rest-assured:5.5.2'
     testImplementation 'org.assertj:assertj-core:3.27.3'
     testImplementation 'net.datafaker:datafaker:2.4.3'
@@ -80,7 +87,8 @@ sonar {
         property 'sonar.exclusions', '**/Application.java'
         property 'sonar.coverage.exclusions', '**/Application.java'
         property 'sonar.host.url', 'http://localhost:34601'
-        property 'sonar.login', 'sqa_6bc8ab6d2ee2006ac37d0fd80749a2c8597e4d1c'
+        property 'sonar.token', 'sqa_6bc8ab6d2ee2006ac37d0fd80749a2c8597e4d1c'
+        property "sonar.coverage.jacoco.xmlReportPaths", "${projectDir}/build/reports/jacoco/test/jacocoTestReport.xml"
     }
 }
 

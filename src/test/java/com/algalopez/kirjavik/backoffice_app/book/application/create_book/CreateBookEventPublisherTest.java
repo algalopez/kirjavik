@@ -1,7 +1,5 @@
 package com.algalopez.kirjavik.backoffice_app.book.application.create_book;
 
-import java.time.LocalDateTime;
-import java.util.UUID;
 import com.algalopez.kirjavik.backoffice_app.book.domain.event.BookCreated;
 import com.algalopez.kirjavik.backoffice_app.book.domain.model.Book;
 import com.algalopez.kirjavik.backoffice_app.book.domain.model.BookMother;
@@ -9,6 +7,8 @@ import com.algalopez.kirjavik.shared.application.EventBusPort;
 import com.algalopez.kirjavik.shared.domain.port.DateTimeProviderPort;
 import com.algalopez.kirjavik.shared.domain.port.UuidProviderPort;
 import com.algalopez.kirjavik.shared.domain.service.DomainMetadataService;
+import java.time.LocalDateTime;
+import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -50,7 +50,7 @@ class CreateBookEventPublisherTest {
                 .id(book.getId())
                 .isbn(book.getIsbn())
                 .title(book.getTitle())
-                .authors(book.getAuthors())
+                .author(book.getAuthor())
                 .pageCount(book.getPageCount())
                 .year(book.getYear())
                 .build());

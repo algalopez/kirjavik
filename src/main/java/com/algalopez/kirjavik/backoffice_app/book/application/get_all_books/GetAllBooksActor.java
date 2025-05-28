@@ -15,11 +15,30 @@ public class GetAllBooksActor {
   private final GetAllBooksMapper getAllBooksMapper;
 
   public GetAllBooksResponse query(GetAllBooksRequest request) {
+    ensureValidRequest(request);
     BookViewSpec bookViewSpec = getAllBooksMapper.mapToSpec(request);
     List<BookView> books = bookViewRepository.findAllByFilter(bookViewSpec);
 
     return GetAllBooksResponse.builder()
         .books(books.stream().map(getAllBooksMapper::mapToResponse).toList())
         .build();
+  }
+
+  private static void ensureValidRequest(GetAllBooksRequest request) {
+    request.getFilters().forEach(GetAllBooksActor::ensureValidFilter);
+  }
+
+  private static void ensureValidFilter(GetAllBooksRequest.FilterDto filter) {
+    List<String> validFields = List.of("id", "isbn", "title", "author", "pageCount", "year");
+    if (!validFields.contains(filter.getField())) {
+      throw new IllegalArgumentException("Invalid field: " + filter.getField());
+    }
+    List<String> validOperators = List.of("EQUALS", "STARTS_WITH", "GREATER_THAN");
+    if (!validOperators.contains(filter.getOperator())) {
+      throw new IllegalArgumentException("Invalid operator: " + filter.getOperator());
+    }
+    if (!filter.getValue().chars().allMatch(Character::isLetterOrDigit)) {
+      throw new IllegalArgumentException("Invalid value: " + filter.getValue());
+    }
   }
 }

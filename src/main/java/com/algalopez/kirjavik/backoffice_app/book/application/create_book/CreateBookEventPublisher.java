@@ -1,11 +1,11 @@
 package com.algalopez.kirjavik.backoffice_app.book.application.create_book;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import lombok.RequiredArgsConstructor;
 import com.algalopez.kirjavik.backoffice_app.book.domain.event.BookCreated;
 import com.algalopez.kirjavik.backoffice_app.book.domain.model.Book;
 import com.algalopez.kirjavik.shared.application.EventBusPort;
 import com.algalopez.kirjavik.shared.domain.service.DomainMetadataService;
+import jakarta.enterprise.context.ApplicationScoped;
+import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @ApplicationScoped
@@ -25,7 +25,7 @@ public class CreateBookEventPublisher {
             .id(book.getId())
             .isbn(book.getIsbn())
             .title(book.getTitle())
-            .authors(book.getAuthors())
+            .author(book.getAuthor())
             .pageCount(book.getPageCount())
             .year(book.getYear())
             .build();

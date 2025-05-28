@@ -1,8 +1,6 @@
 package com.algalopez.kirjavik.backoffice_app.book.domain.model;
 
-import java.util.List;
 import java.util.UUID;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,7 +14,7 @@ public class Book {
   private UUID id;
   private String isbn;
   private String title;
-  private List<String> authors;
+  private String author;
   private Integer pageCount;
   private Integer year;
 }

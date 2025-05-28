@@ -2,11 +2,11 @@ package com.algalopez.kirjavik.backoffice_app.book.application.get_all_books;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.algalopez.kirjavik.backoffice_app.book.domain.view.BookView;
+import com.algalopez.kirjavik.backoffice_app.book.domain.view.BookViewSpec;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Stream;
-import com.algalopez.kirjavik.backoffice_app.book.domain.view.BookView;
-import com.algalopez.kirjavik.backoffice_app.book.domain.view.BookViewSpec;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -68,7 +68,7 @@ class GetAllBooksMapperTest {
             .id(UUID.fromString("01970859-0cd4-7a46-9917-3c7c82daf5b4"))
             .isbn("isbn")
             .title("title")
-            .authors(List.of("author"))
+            .author("author")
             .pageCount(400)
             .year(2000)
             .build();
@@ -81,7 +81,7 @@ class GetAllBooksMapperTest {
                 .id("01970859-0cd4-7a46-9917-3c7c82daf5b4")
                 .isbn("isbn")
                 .title("title")
-                .authors(List.of("author"))
+                .author("author")
                 .pageCount(400)
                 .year(2000)
                 .build());

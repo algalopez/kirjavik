@@ -1,11 +1,9 @@
-package com.algalopez.kirjavik.backoffice_app.book.domain.model;
+package com.algalopez.kirjavik.backoffice_app.book.domain.view;
 
-import java.util.List;
 import java.util.UUID;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import net.datafaker.Faker;
-import com.algalopez.kirjavik.backoffice_app.book.domain.view.BookView;
 
 @Accessors(fluent = true)
 @Setter
@@ -13,7 +11,7 @@ public class BookViewMother {
   private UUID id;
   private String isbn;
   private String title;
-  private List<String> authors;
+  private String author;
   private Integer pageCount;
   private Integer year;
 
@@ -22,7 +20,7 @@ public class BookViewMother {
     id = UUID.fromString(faker.internet().uuidv7());
     isbn = faker.code().isbn13();
     title = faker.book().title();
-    authors = List.of(faker.book().author());
+    author = faker.book().author();
     pageCount = faker.number().numberBetween(1, 1000);
     year = faker.number().numberBetween(-5000, 5000);
   }
@@ -32,7 +30,7 @@ public class BookViewMother {
         .id(id)
         .isbn(isbn)
         .title(title)
-        .authors(authors)
+        .author(author)
         .pageCount(pageCount)
         .year(year)
         .build();

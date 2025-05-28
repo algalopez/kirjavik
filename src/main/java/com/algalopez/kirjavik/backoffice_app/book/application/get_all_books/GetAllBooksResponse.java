@@ -8,10 +8,5 @@ public record GetAllBooksResponse(List<BookDto> books) {
 
   @Builder
   public record BookDto(
-      String id,
-      String isbn,
-      String title,
-      List<String> authors,
-      Integer pageCount,
-      Integer year) {}
+      String id, String isbn, String title, String author, Integer pageCount, Integer year) {}
 }

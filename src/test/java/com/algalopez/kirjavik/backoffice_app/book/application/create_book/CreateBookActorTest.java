@@ -1,12 +1,11 @@
 package com.algalopez.kirjavik.backoffice_app.book.application.create_book;
 
-import java.util.List;
-import java.util.UUID;
 import com.algalopez.kirjavik.backoffice_app.book.domain.event.BookCreated;
 import com.algalopez.kirjavik.backoffice_app.book.domain.model.Book;
 import com.algalopez.kirjavik.backoffice_app.book.domain.port.BookRepositoryPort;
 import com.algalopez.kirjavik.shared.application.EventBusPort;
 import com.algalopez.kirjavik.shared.domain.service.DomainMetadataService;
+import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
@@ -45,7 +44,7 @@ class CreateBookActorTest {
                 .id(UUID.fromString(createBookCommand.id()))
                 .isbn(createBookCommand.isbn())
                 .title(createBookCommand.title())
-                .authors(createBookCommand.authors())
+                .author(createBookCommand.author())
                 .pageCount(createBookCommand.pageCount())
                 .year(createBookCommand.year())
                 .build());
@@ -57,7 +56,7 @@ class CreateBookActorTest {
         .id(UUID.randomUUID().toString())
         .isbn("isbn")
         .title("title")
-        .authors(List.of("author"))
+        .author("author")
         .pageCount(1)
         .year(2000)
         .build();

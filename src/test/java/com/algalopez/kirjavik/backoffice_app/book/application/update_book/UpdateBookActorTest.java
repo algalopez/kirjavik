@@ -2,8 +2,6 @@ package com.algalopez.kirjavik.backoffice_app.book.application.update_book;
 
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
-import java.util.List;
-import java.util.UUID;
 import com.algalopez.kirjavik.backoffice_app.book.domain.event.BookUpdated;
 import com.algalopez.kirjavik.backoffice_app.book.domain.exception.BookNotFoundException;
 import com.algalopez.kirjavik.backoffice_app.book.domain.model.Book;
@@ -11,6 +9,7 @@ import com.algalopez.kirjavik.backoffice_app.book.domain.model.BookMother;
 import com.algalopez.kirjavik.backoffice_app.book.domain.port.BookRepositoryPort;
 import com.algalopez.kirjavik.shared.application.EventBusPort;
 import com.algalopez.kirjavik.shared.domain.service.DomainMetadataService;
+import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
@@ -51,7 +50,7 @@ class UpdateBookActorTest {
                 .id(UUID.fromString(updateBookCommand.id()))
                 .isbn(updateBookCommand.isbn())
                 .title(updateBookCommand.title())
-                .authors(updateBookCommand.authors())
+                .author(updateBookCommand.author())
                 .pageCount(updateBookCommand.pageCount())
                 .year(updateBookCommand.year())
                 .build());
@@ -74,7 +73,7 @@ class UpdateBookActorTest {
         .id(UUID.randomUUID().toString())
         .isbn("123")
         .title("title")
-        .authors(List.of("author"))
+        .author("author")
         .pageCount(1)
         .year(1)
         .build();

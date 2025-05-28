@@ -16,7 +16,7 @@ class QuarkusContextIntegrationTest {
   EntityManager entityManager;
 
   @Test
-  public void contextLoads() {
+  void contextLoads() {
     // Tests that the context loads
     assertThat(entityManager).isNotNull();
   }

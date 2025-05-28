@@ -16,6 +16,13 @@ import org.hibernate.query.NativeQuery;
 @ApplicationScoped
 public class BookViewRepositoryAdapter implements BookViewRepositoryPort {
 
+  private static final String ID = "id";
+  private static final String ISBN = "isbn";
+  private static final String TITLE = "title";
+  private static final String AUTHOR = "author";
+  private static final String PAGE_COUNT = "pageCount";
+  private static final String YEAR = "year";
+
   private final EntityManager entityManager;
 
   public BookViewRepositoryAdapter(@PersistenceUnit("backoffice") EntityManager entityManager) {
@@ -28,7 +35,7 @@ public class BookViewRepositoryAdapter implements BookViewRepositoryPort {
 
     String sql =
         """
-        SELECT id, isbn, title, authors, page_count AS pageCount, year
+        SELECT id, isbn, title, author, page_count AS pageCount, year
         FROM book
         """
             + whereClause.sql;
@@ -39,12 +46,12 @@ public class BookViewRepositoryAdapter implements BookViewRepositoryPort {
     }
     query
         .unwrap(NativeQuery.class)
-        .addScalar("id", String.class)
-        .addScalar("isbn", String.class)
-        .addScalar("title", String.class)
-        .addScalar("authors", String.class)
-        .addScalar("pageCount", Integer.class)
-        .addScalar("year", Integer.class);
+        .addScalar(ID, String.class)
+        .addScalar(ISBN, String.class)
+        .addScalar(TITLE, String.class)
+        .addScalar(AUTHOR, String.class)
+        .addScalar(PAGE_COUNT, Integer.class)
+        .addScalar(YEAR, Integer.class);
 
     @SuppressWarnings("unchecked")
     List<Tuple> rows = query.getResultList();
@@ -56,19 +63,19 @@ public class BookViewRepositoryAdapter implements BookViewRepositoryPort {
   public BookView findById(UUID id) {
     String sql =
         """
-            SELECT id, isbn, title, authors, page_count AS pageCount, year
+            SELECT id, isbn, title, author, page_count AS pageCount, year
             FROM book
             WHERE id = :id""";
     Query query = entityManager.createNativeQuery(sql, Tuple.class);
-    query.setParameter("id", id.toString());
+    query.setParameter(ID, id.toString());
     query
         .unwrap(NativeQuery.class)
-        .addScalar("id", String.class)
-        .addScalar("isbn", String.class)
-        .addScalar("title", String.class)
-        .addScalar("authors", String.class)
-        .addScalar("pageCount", Integer.class)
-        .addScalar("year", Integer.class);
+        .addScalar(ID, String.class)
+        .addScalar(ISBN, String.class)
+        .addScalar(TITLE, String.class)
+        .addScalar(AUTHOR, String.class)
+        .addScalar(PAGE_COUNT, Integer.class)
+        .addScalar(YEAR, Integer.class);
 
     @SuppressWarnings("unchecked")
     Tuple tuple = ((NativeQuery<Tuple>) query).uniqueResult();
@@ -81,6 +88,8 @@ public class BookViewRepositoryAdapter implements BookViewRepositoryPort {
 
   @AllArgsConstructor
   private static class BookViewSqlBuilder {
+
+    private static final String AND = " AND ";
 
     public final String sql;
     public final Map<String, Object> parameters;
@@ -95,19 +104,17 @@ public class BookViewRepositoryAdapter implements BookViewRepositoryPort {
 
         switch (filter.operator()) {
           case EQUALS -> {
-            where.append(" AND ").append(filter.field()).append(" = :").append(paramName);
+            where.append(AND).append(filter.field()).append(" = :").append(paramName);
             params.put(paramName, filter.value());
           }
           case GREATER_THAN -> {
-            where.append(" AND ").append(filter.field()).append(" > :").append(paramName);
+            where.append(AND).append(filter.field()).append(" > :").append(paramName);
             params.put(paramName, Integer.parseInt(filter.value()));
           }
           case STARTS_WITH -> {
-            where.append(" AND ").append(filter.field()).append(" LIKE :").append(paramName);
+            where.append(AND).append(filter.field()).append(" LIKE :").append(paramName);
             params.put(paramName, filter.value() + "%");
           }
-          default ->
-              throw new UnsupportedOperationException("Unsupported operator: " + filter.operator());
         }
       }
 
@@ -116,17 +123,17 @@ public class BookViewRepositoryAdapter implements BookViewRepositoryPort {
   }
 
   private static BookView mapToView(Tuple tuple) {
-    String id = tuple.get("id", String.class);
-    String isbn = tuple.get("isbn", String.class);
-    String title = tuple.get("title", String.class);
-    String authors = tuple.get("authors", String.class);
-    Integer pageCount = tuple.get("pageCount", Integer.class);
-    Integer year = tuple.get("year", Integer.class);
+    String id = tuple.get(ID, String.class);
+    String isbn = tuple.get(ISBN, String.class);
+    String title = tuple.get(TITLE, String.class);
+    String author = tuple.get(AUTHOR, String.class);
+    Integer pageCount = tuple.get(PAGE_COUNT, Integer.class);
+    Integer year = tuple.get(YEAR, Integer.class);
     return BookView.builder()
         .id(UUID.fromString(id))
         .isbn(isbn)
         .title(title)
-        .authors(List.of(authors))
+        .author(author)
         .pageCount(pageCount)
         .year(year)
         .build();

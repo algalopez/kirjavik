@@ -2,9 +2,8 @@ package com.algalopez.kirjavik.backoffice_app.book.application.update_book;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.List;
-import java.util.UUID;
 import com.algalopez.kirjavik.backoffice_app.book.domain.model.Book;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 
@@ -16,7 +15,7 @@ class UpdateBookMapperTest {
   void mapToDomain() {
     UpdateBookCommand command =
         new UpdateBookCommand(
-            "01970864-a920-7b34-9be2-1f1703a6396a", "isbn", "title", List.of("author"), 400, 2000);
+            "01970864-a920-7b34-9be2-1f1703a6396a", "isbn", "title", "author", 400, 2000);
 
     Book actualBook = mapper.mapToDomain(command);
 
@@ -26,7 +25,7 @@ class UpdateBookMapperTest {
                 .id(UUID.fromString("01970864-a920-7b34-9be2-1f1703a6396a"))
                 .isbn("isbn")
                 .title("title")
-                .authors(List.of("author"))
+                .author("author")
                 .pageCount(400)
                 .year(2000)
                 .build());
