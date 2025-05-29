@@ -1,0 +1,51 @@
+package com.algalopez.kirjavik.backoffice_app.user.application.delete_user;
+
+import com.algalopez.kirjavik.backoffice_app.user.domain.event.UserDeleted;
+import com.algalopez.kirjavik.shared.application.EventBusPort;
+import com.algalopez.kirjavik.shared.domain.port.DateTimeProviderPort;
+import com.algalopez.kirjavik.shared.domain.port.UuidProviderPort;
+import com.algalopez.kirjavik.shared.domain.service.DomainMetadataService;
+import java.time.LocalDateTime;
+import java.util.UUID;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+
+class DeleteUserEventPublisherTest {
+
+  private UuidProviderPort uuidProvider;
+  private DateTimeProviderPort dateTimeProvider;
+  private EventBusPort eventBusPort;
+  private DeleteUserEventPublisher deleteUserEventPublisher;
+
+  @BeforeEach
+  void setUp() {
+    dateTimeProvider = Mockito.mock(DateTimeProviderPort.class);
+    uuidProvider = Mockito.mock(UuidProviderPort.class);
+    DomainMetadataService domainMetadataService =
+        new DomainMetadataService(uuidProvider, dateTimeProvider);
+    eventBusPort = Mockito.mock(EventBusPort.class);
+    deleteUserEventPublisher = new DeleteUserEventPublisher(domainMetadataService, eventBusPort);
+  }
+
+  @Test
+  void publishUserDeletedEvent() {
+    UUID id = UUID.fromString("0197086d-f7a3-7b30-91e4-5370d69d4c7f");
+    Mockito.when(dateTimeProvider.getDateTime()).thenReturn(LocalDateTime.of(2023, 1, 2, 3, 4, 5));
+    Mockito.when(uuidProvider.getUuid())
+        .thenReturn(UUID.fromString("01970869-0fa6-7395-bb9d-d2a6d35e9c14"));
+
+    deleteUserEventPublisher.publishUserDeletedEvent(id);
+
+    Mockito.verify(eventBusPort)
+        .publish(
+            UserDeleted.builder()
+                .eventId("01970869-0fa6-7395-bb9d-d2a6d35e9c14")
+                .eventType(UserDeleted.EVENT_TYPE)
+                .aggregateId(id.toString())
+                .aggregateType(UserDeleted.AGGREGATE_TYPE)
+                .dateTime("2023-01-02T03:04:05")
+                .id(id)
+                .build());
+  }
+}
