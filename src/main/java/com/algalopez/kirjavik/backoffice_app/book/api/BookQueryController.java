@@ -37,7 +37,7 @@ public class BookQueryController {
     return getBookActor.query(query);
   }
 
-  @Operation(summary = "Get book by id")
+  @Operation(summary = "Get all books by filter")
   @APIResponse(
       responseCode = "200",
       content = @Content(schema = @Schema(implementation = GetBookResponse.class)))
