@@ -101,7 +101,7 @@ def createFlywayTask(String taskName, String command, String contextDir, String 
                 '--network', 'kirjavik_network',
                 'flyway/flyway:11.8.1-alpine',
                 "-configFiles=/database/${contextDir}/conf/flyway-${contextDir}.conf",
-                command
+                'clean', command
     }
 }
 
