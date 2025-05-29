@@ -28,8 +28,10 @@ Run sonar
 
 Run app
 
-`./gradlew quarkusRun`
+`./gradlew quarkusDev -Dquarkus.profile=prod`
 
-Open swagger
+Open project
+
+`http://localhost:8080/q/dev-ui/extensions`
 
 `http://localhost:8080/q/swagger-ui`

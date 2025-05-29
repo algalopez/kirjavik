@@ -14,7 +14,7 @@ public class GetAllBooksActor {
   private final BookViewRepositoryPort bookViewRepository;
   private final GetAllBooksMapper getAllBooksMapper;
 
-  public GetAllBooksResponse query(GetAllBooksRequest request) {
+  public GetAllBooksResponse query(GetAllBooksQuery request) {
     ensureValidRequest(request);
     BookViewSpec bookViewSpec = getAllBooksMapper.mapToSpec(request);
     List<BookView> books = bookViewRepository.findAllByFilter(bookViewSpec);
@@ -24,11 +24,11 @@ public class GetAllBooksActor {
         .build();
   }
 
-  private static void ensureValidRequest(GetAllBooksRequest request) {
+  private static void ensureValidRequest(GetAllBooksQuery request) {
     request.getFilters().forEach(GetAllBooksActor::ensureValidFilter);
   }
 
-  private static void ensureValidFilter(GetAllBooksRequest.FilterDto filter) {
+  private static void ensureValidFilter(GetAllBooksQuery.FilterDto filter) {
     List<String> validFields = List.of("id", "isbn", "title", "author", "pageCount", "year");
     if (!validFields.contains(filter.getField())) {
       throw new IllegalArgumentException("Invalid field: " + filter.getField());

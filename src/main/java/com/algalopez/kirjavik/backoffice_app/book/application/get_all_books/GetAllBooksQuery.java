@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Builder
 @Data
-public class GetAllBooksRequest {
+public class GetAllBooksQuery {
   private List<FilterDto> filters;
 
   @Builder

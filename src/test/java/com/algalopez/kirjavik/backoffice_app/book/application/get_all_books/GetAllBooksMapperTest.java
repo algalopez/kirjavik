@@ -19,11 +19,11 @@ class GetAllBooksMapperTest {
 
   @Test
   void mapToSpec() {
-    GetAllBooksRequest request =
-        GetAllBooksRequest.builder()
+    GetAllBooksQuery request =
+        GetAllBooksQuery.builder()
             .filters(
                 List.of(
-                    GetAllBooksRequest.FilterDto.builder()
+                    GetAllBooksQuery.FilterDto.builder()
                         .field("field")
                         .operator("EQUALS")
                         .value("value")
@@ -48,7 +48,7 @@ class GetAllBooksMapperTest {
   @MethodSource("mapToSpec_shouldMapAllOperators_source")
   @ParameterizedTest
   void mapToSpec_shouldMapAllOperators(
-      GetAllBooksRequest request, BookViewSpec.Operator expectedOperator) {
+          GetAllBooksQuery request, BookViewSpec.Operator expectedOperator) {
     BookViewSpec actualSpec = mapper.mapToSpec(request);
 
     assertThat(actualSpec.filters().getFirst().operator()).isEqualTo(expectedOperator);
@@ -87,11 +87,11 @@ class GetAllBooksMapperTest {
                 .build());
   }
 
-  private static GetAllBooksRequest buildGetAllBooksRequest(String operator) {
-    return GetAllBooksRequest.builder()
+  private static GetAllBooksQuery buildGetAllBooksRequest(String operator) {
+    return GetAllBooksQuery.builder()
         .filters(
             List.of(
-                GetAllBooksRequest.FilterDto.builder()
+                GetAllBooksQuery.FilterDto.builder()
                     .field("field")
                     .operator(operator)
                     .value("value")

@@ -31,11 +31,11 @@ class GetAllBooksActorTest {
   @Test
   void query() {
     BookView book = new BookViewMother().build();
-    GetAllBooksRequest request =
-        GetAllBooksRequest.builder()
+    GetAllBooksQuery request =
+        GetAllBooksQuery.builder()
             .filters(
                 List.of(
-                    GetAllBooksRequest.FilterDto.builder()
+                    GetAllBooksQuery.FilterDto.builder()
                         .field("id")
                         .operator("EQUALS")
                         .value("1")
@@ -65,11 +65,11 @@ class GetAllBooksActorTest {
   @MethodSource("query_whenValidRequest_source")
   @ParameterizedTest
   void query_whenValidRequest(String field, String operator, String value) {
-    GetAllBooksRequest request =
-        GetAllBooksRequest.builder()
+    GetAllBooksQuery request =
+        GetAllBooksQuery.builder()
             .filters(
                 List.of(
-                    GetAllBooksRequest.FilterDto.builder()
+                    GetAllBooksQuery.FilterDto.builder()
                         .field(field)
                         .operator(operator)
                         .value(value)
@@ -98,11 +98,11 @@ class GetAllBooksActorTest {
   @MethodSource("query_whenInvalidRequest_source")
   @ParameterizedTest
   void query_whenInvalidRequest(String field, String operator, String value) {
-    GetAllBooksRequest request =
-        GetAllBooksRequest.builder()
+    GetAllBooksQuery request =
+        GetAllBooksQuery.builder()
             .filters(
                 List.of(
-                    GetAllBooksRequest.FilterDto.builder()
+                    GetAllBooksQuery.FilterDto.builder()
                         .field(field)
                         .operator(operator)
                         .value(value)

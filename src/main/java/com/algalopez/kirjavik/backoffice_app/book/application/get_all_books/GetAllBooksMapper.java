@@ -8,7 +8,7 @@ import org.mapstruct.MappingConstants;
 @Mapper(componentModel = MappingConstants.ComponentModel.JAKARTA_CDI)
 public interface GetAllBooksMapper {
 
-  BookViewSpec mapToSpec(GetAllBooksRequest query);
+  BookViewSpec mapToSpec(GetAllBooksQuery query);
 
   GetAllBooksResponse.BookDto mapToResponse(BookView book);
 }
