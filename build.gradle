@@ -46,16 +46,30 @@ jacocoTestReport {
     }
 }
 
+// Force kurrentdb grpc versions at the expense of maybe breaking quarkus in the future
+configurations.configureEach {
+    resolutionStrategy {
+        force 'com.google.protobuf:protobuf-java:4.28.2'
+        force 'com.google.protobuf:protobuf-java-util:4.28.2'
+
+        force 'io.grpc:grpc-api:1.71.0'
+        force 'io.grpc:grpc-context:1.71.0'
+        force 'io.grpc:grpc-core:1.71.0'
+        force 'io.grpc:grpc-stub:1.71.0'
+        force 'io.grpc:grpc-protobuf:1.71.0'
+    }
+}
+
 dependencies {
+
     implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
-    implementation enforcedPlatform("${quarkusPlatformGroupId}:quarkus-cxf-bom:${quarkusPlatformVersion}")
-    implementation 'io.quarkiverse.cxf:quarkus-cxf'
     implementation 'io.quarkus:quarkus-rest-jackson'
     implementation("io.quarkus:quarkus-hibernate-orm")
     implementation 'io.quarkus:quarkus-jdbc-mariadb'
     implementation 'io.quarkus:quarkus-smallrye-openapi'
     implementation 'io.quarkus:quarkus-arc'
     implementation 'org.mapstruct:mapstruct:1.6.3'
+    implementation 'io.kurrent:kurrentdb-client:1.0.1'
 
     compileOnly 'org.projectlombok:lombok:1.18.38'
 
@@ -106,5 +120,5 @@ def createFlywayTask(String taskName, String command, String contextDir, String 
 }
 
 createFlywayTask('migrateBackoffice', 'migrate', 'backoffice', 'Migrate backoffice')
-createFlywayTask('migrateKirjavik', 'migrate', 'kirjavik', 'Migrate kirjavik')
+createFlywayTask('migrateHavn', 'migrate', 'havn', 'Migrate Havn')
 createFlywayTask('migrateStats', 'migrate', 'stats', 'Migrate stats')
