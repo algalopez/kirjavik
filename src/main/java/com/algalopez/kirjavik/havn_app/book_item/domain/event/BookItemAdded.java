@@ -1,6 +1,5 @@
 package com.algalopez.kirjavik.havn_app.book_item.domain.event;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;

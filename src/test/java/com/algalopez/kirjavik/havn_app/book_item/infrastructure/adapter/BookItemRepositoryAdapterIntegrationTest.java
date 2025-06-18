@@ -20,7 +20,7 @@ import org.junit.jupiter.api.Test;
 @QuarkusTest
 class BookItemRepositoryAdapterIntegrationTest {
 
-  private static final String BOOK_ID = "125";
+  private static final String BOOK_ITEM_ID = "1234";
   private static final String FIELD_USER_ID = "userId";
   private static final String FIELD_ID = "id";
   private static final String FIELD_BOOK_ID = "bookId";
@@ -35,13 +35,13 @@ class BookItemRepositoryAdapterIntegrationTest {
 
   @AfterEach
   void tearDown() throws ExecutionException, InterruptedException {
-    eventStoreDBClient.deleteStream("BookItem-" + BOOK_ID).get();
+    eventStoreDBClient.deleteStream("BookItem-" + BOOK_ITEM_ID).get();
   }
 
   @Test
   void storeBookItemAddedEvent() throws ExecutionException, InterruptedException {
-    BookItemAdded bookItemAdded = new BookItemAddedMother().bookId(BOOK_ID).build();
-    String expectedStreamName = "BookItem-" + bookItemAdded.getBookId();
+    BookItemAdded bookItemAdded = new BookItemAddedMother().id(BOOK_ITEM_ID).build();
+    String expectedStreamName = "BookItem-" + bookItemAdded.getId();
 
     bookItemRepositoryAdapter.storeBookItemAddedEvent(bookItemAdded);
 
@@ -66,8 +66,8 @@ class BookItemRepositoryAdapterIntegrationTest {
 
   @Test
   void storeBookItemRemovedEvent() throws ExecutionException, InterruptedException {
-    BookItemRemoved bookItemRemoved = new BookItemRemovedMother().bookId(BOOK_ID).build();
-    String expectedStreamName = "BookItem-" + bookItemRemoved.getBookId();
+    BookItemRemoved bookItemRemoved = new BookItemRemovedMother().id(BOOK_ITEM_ID).build();
+    String expectedStreamName = "BookItem-" + bookItemRemoved.getId();
 
     bookItemRepositoryAdapter.storeBookItemRemovedEvent(bookItemRemoved);
 
@@ -92,8 +92,8 @@ class BookItemRepositoryAdapterIntegrationTest {
 
   @Test
   void storeBookItemBorrowedEvent() throws ExecutionException, InterruptedException {
-    BookItemBorrowed bookItemBorrowed = new BookItemBorrowedMother().bookId(BOOK_ID).build();
-    String expectedStreamName = "BookItem-" + bookItemBorrowed.getBookId();
+    BookItemBorrowed bookItemBorrowed = new BookItemBorrowedMother().id(BOOK_ITEM_ID).build();
+    String expectedStreamName = "BookItem-" + bookItemBorrowed.getId();
 
     bookItemRepositoryAdapter.storeBookItemBorrowedEvent(bookItemBorrowed);
 
@@ -118,8 +118,8 @@ class BookItemRepositoryAdapterIntegrationTest {
 
   @Test
   void storeBookItemReturnedEvent() throws ExecutionException, InterruptedException {
-    BookItemReturned bookItemReturned = new BookItemReturnedMother().bookId(BOOK_ID).build();
-    String expectedStreamName = "BookItem-" + bookItemReturned.getBookId();
+    BookItemReturned bookItemReturned = new BookItemReturnedMother().id(BOOK_ITEM_ID).build();
+    String expectedStreamName = "BookItem-" + bookItemReturned.getId();
 
     bookItemRepositoryAdapter.storeBookItemReturnedEvent(bookItemReturned);
 

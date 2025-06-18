@@ -29,7 +29,7 @@ public class BookItemRepositoryAdapter implements BookItemRepositoryPort {
 
     AppendToStreamOptions options =
         AppendToStreamOptions.get().streamState(StreamState.noStream()).deadline(APPEND_DEADLINE);
-    String streamName = bookItemAdded.getAggregateType() + "-" + bookItemAdded.getBookId();
+    String streamName = bookItemAdded.getAggregateType() + "-" + bookItemAdded.getId();
 
     kurrentDBClient.appendToStream(streamName, options, eventData).get();
   }
@@ -46,7 +46,7 @@ public class BookItemRepositoryAdapter implements BookItemRepositoryPort {
             .build();
 
     AppendToStreamOptions options = AppendToStreamOptions.get().deadline(APPEND_DEADLINE);
-    String streamName = bookItemRemoved.getAggregateType() + "-" + bookItemRemoved.getBookId();
+    String streamName = bookItemRemoved.getAggregateType() + "-" + bookItemRemoved.getId();
     kurrentDBClient.appendToStream(streamName, options, eventData).get();
   }
 
@@ -62,7 +62,7 @@ public class BookItemRepositoryAdapter implements BookItemRepositoryPort {
             .build();
 
     AppendToStreamOptions options = AppendToStreamOptions.get().deadline(APPEND_DEADLINE);
-    String streamName = bookItemBorrowed.getAggregateType() + "-" + bookItemBorrowed.getBookId();
+    String streamName = bookItemBorrowed.getAggregateType() + "-" + bookItemBorrowed.getId();
     kurrentDBClient.appendToStream(streamName, options, eventData).get();
   }
 
@@ -78,7 +78,7 @@ public class BookItemRepositoryAdapter implements BookItemRepositoryPort {
             .build();
 
     AppendToStreamOptions options = AppendToStreamOptions.get().deadline(APPEND_DEADLINE);
-    String streamName = bookItemReturned.getAggregateType() + "-" + bookItemReturned.getBookId();
+    String streamName = bookItemReturned.getAggregateType() + "-" + bookItemReturned.getId();
     kurrentDBClient.appendToStream(streamName, options, eventData).get();
   }
 }
