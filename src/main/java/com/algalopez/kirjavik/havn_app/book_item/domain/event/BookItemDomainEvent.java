@@ -5,4 +5,7 @@ import lombok.experimental.SuperBuilder;
 
 @SuperBuilder
 public abstract sealed class BookItemDomainEvent extends DomainEvent
-    permits BookItemAdded, BookItemRemoved, BookItemBorrowed, BookItemReturned {}
+    permits BookItemAdded, BookItemRemoved, BookItemBorrowed, BookItemReturned {
+
+  public static final String AGGREGATE_TYPE = "BookItem";
+}

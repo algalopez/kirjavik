@@ -1,41 +1,46 @@
-package com.algalopez.kirjavik.havn_app.book_item.infrastructure.adapter;
+package com.algalopez.kirjavik.havn_app.book_item.infrastructure.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.algalopez.kirjavik.havn_app.book_item.domain.event.*;
-import java.util.concurrent.CompletableFuture;
-
+import io.kurrent.dbclient.AppendToStreamOptions;
 import io.kurrent.dbclient.EventData;
 import io.kurrent.dbclient.KurrentDBClient;
+import java.util.concurrent.CompletableFuture;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
-class BookItemRepositoryAdapterTest {
+class BookItemStorerDaoTest {
 
   private KurrentDBClient eventStoreDBClient;
-  private BookItemRepositoryAdapter bookItemRepositoryAdapter;
+  private BookItemStorerDao bookItemStorerDao;
 
   @BeforeEach
   void setUp() {
     eventStoreDBClient = Mockito.mock(KurrentDBClient.class);
-    bookItemRepositoryAdapter = new BookItemRepositoryAdapter(eventStoreDBClient);
+    bookItemStorerDao = new BookItemStorerDao(eventStoreDBClient);
   }
 
   @Test
   void storeBookItemAddedEvent() {
     BookItemAdded bookItemAdded = new BookItemAddedMother().build();
     Mockito.when(
-            eventStoreDBClient.appendToStream(Mockito.anyString(), Mockito.any(EventData.class)))
+            eventStoreDBClient.appendToStream(
+                Mockito.anyString(),
+                Mockito.any(AppendToStreamOptions.class),
+                Mockito.any(EventData.class)))
         .thenReturn(CompletableFuture.completedFuture(null));
 
-    bookItemRepositoryAdapter.storeBookItemAddedEvent(bookItemAdded);
+    bookItemStorerDao.storeBookItemAddedEvent(bookItemAdded);
 
     ArgumentCaptor<EventData> eventDataCaptor = ArgumentCaptor.forClass(EventData.class);
     Mockito.verify(eventStoreDBClient)
         .appendToStream(
-            Mockito.eq("BookItem-" + bookItemAdded.getBookId()), eventDataCaptor.capture());
+            Mockito.eq("BookItem-" + bookItemAdded.getId()),
+            Mockito.any(AppendToStreamOptions.class),
+            eventDataCaptor.capture());
     assertThat(eventDataCaptor.getValue().getEventType()).isEqualTo("BookItemAdded");
   }
 
@@ -43,15 +48,20 @@ class BookItemRepositoryAdapterTest {
   void storeBookItemRemovedEvent() {
     BookItemRemoved bookItemRemoved = new BookItemRemovedMother().build();
     Mockito.when(
-            eventStoreDBClient.appendToStream(Mockito.anyString(), Mockito.any(EventData.class)))
+            eventStoreDBClient.appendToStream(
+                Mockito.anyString(),
+                Mockito.any(AppendToStreamOptions.class),
+                Mockito.any(EventData.class)))
         .thenReturn(CompletableFuture.completedFuture(null));
 
-    bookItemRepositoryAdapter.storeBookItemRemovedEvent(bookItemRemoved);
+    bookItemStorerDao.storeBookItemRemovedEvent(bookItemRemoved);
 
     ArgumentCaptor<EventData> eventDataCaptor = ArgumentCaptor.forClass(EventData.class);
     Mockito.verify(eventStoreDBClient)
         .appendToStream(
-            Mockito.eq("BookItem-" + bookItemRemoved.getBookId()), eventDataCaptor.capture());
+            Mockito.eq("BookItem-" + bookItemRemoved.getId()),
+            Mockito.any(AppendToStreamOptions.class),
+            eventDataCaptor.capture());
     assertThat(eventDataCaptor.getValue().getEventType()).isEqualTo("BookItemRemoved");
   }
 
@@ -59,15 +69,20 @@ class BookItemRepositoryAdapterTest {
   void storeBookItemBorrowedEvent() {
     BookItemBorrowed bookItemBorrowed = new BookItemBorrowedMother().build();
     Mockito.when(
-            eventStoreDBClient.appendToStream(Mockito.anyString(), Mockito.any(EventData.class)))
+            eventStoreDBClient.appendToStream(
+                Mockito.anyString(),
+                Mockito.any(AppendToStreamOptions.class),
+                Mockito.any(EventData.class)))
         .thenReturn(CompletableFuture.completedFuture(null));
 
-    bookItemRepositoryAdapter.storeBookItemBorrowedEvent(bookItemBorrowed);
+    bookItemStorerDao.storeBookItemBorrowedEvent(bookItemBorrowed);
 
     ArgumentCaptor<EventData> eventDataCaptor = ArgumentCaptor.forClass(EventData.class);
     Mockito.verify(eventStoreDBClient)
         .appendToStream(
-            Mockito.eq("BookItem-" + bookItemBorrowed.getBookId()), eventDataCaptor.capture());
+            Mockito.eq("BookItem-" + bookItemBorrowed.getId()),
+            Mockito.any(AppendToStreamOptions.class),
+            eventDataCaptor.capture());
     assertThat(eventDataCaptor.getValue().getEventType()).isEqualTo("BookItemBorrowed");
   }
 
@@ -75,15 +90,20 @@ class BookItemRepositoryAdapterTest {
   void storeBookItemReturnedEvent() {
     BookItemReturned bookItemReturned = new BookItemReturnedMother().build();
     Mockito.when(
-            eventStoreDBClient.appendToStream(Mockito.anyString(), Mockito.any(EventData.class)))
+            eventStoreDBClient.appendToStream(
+                Mockito.anyString(),
+                Mockito.any(AppendToStreamOptions.class),
+                Mockito.any(EventData.class)))
         .thenReturn(CompletableFuture.completedFuture(null));
 
-    bookItemRepositoryAdapter.storeBookItemReturnedEvent(bookItemReturned);
+    bookItemStorerDao.storeBookItemReturnedEvent(bookItemReturned);
 
     ArgumentCaptor<EventData> eventDataCaptor = ArgumentCaptor.forClass(EventData.class);
     Mockito.verify(eventStoreDBClient)
         .appendToStream(
-            Mockito.eq("BookItem-" + bookItemReturned.getBookId()), eventDataCaptor.capture());
+            Mockito.eq("BookItem-" + bookItemReturned.getId()),
+            Mockito.any(AppendToStreamOptions.class),
+            eventDataCaptor.capture());
     assertThat(eventDataCaptor.getValue().getEventType()).isEqualTo("BookItemReturned");
   }
 }

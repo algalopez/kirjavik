@@ -3,19 +3,23 @@ package com.algalopez.kirjavik.havn_app.book_item.infrastructure.adapter;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.algalopez.kirjavik.havn_app.book_item.domain.event.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.kurrent.dbclient.KurrentDBClient;
-import io.kurrent.dbclient.ReadResult;
-import io.kurrent.dbclient.ReadStreamOptions;
-import io.kurrent.dbclient.ResolvedEvent;
+import io.kurrent.dbclient.*;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
+import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Stream;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 @QuarkusTest
 class BookItemRepositoryAdapterIntegrationTest {
@@ -30,12 +34,45 @@ class BookItemRepositoryAdapterIntegrationTest {
   private static final String FIELD_EVENT_TYPE = "eventType";
   private static final String FIELD_EVENT_ID = "eventId";
 
-  @Inject KurrentDBClient eventStoreDBClient;
+  @Inject KurrentDBClient kurrentDBClient;
   @Inject BookItemRepositoryAdapter bookItemRepositoryAdapter;
 
   @AfterEach
   void tearDown() throws ExecutionException, InterruptedException {
-    eventStoreDBClient.deleteStream("BookItem-" + BOOK_ITEM_ID).get();
+    kurrentDBClient.deleteStream("BookItem-" + BOOK_ITEM_ID).get();
+  }
+
+  @MethodSource("findBookItemById_source")
+  @ParameterizedTest
+  void findBookItemById(BookItemDomainEvent event)
+      throws JsonProcessingException, ExecutionException, InterruptedException {
+    ObjectMapper objectMapper = new ObjectMapper();
+    EventData eventData =
+        EventData.builderAsJson(
+                UUID.fromString(event.getEventId()),
+                event.getEventType(),
+                objectMapper.writeValueAsBytes(event))
+            .build();
+    kurrentDBClient.appendToStream("BookItem-" + BOOK_ITEM_ID, eventData).get();
+
+    List<BookItemDomainEvent> actualEvents =
+        bookItemRepositoryAdapter.findBookItemEventsById(BOOK_ITEM_ID);
+
+    assertThat(actualEvents).hasSize(1);
+    assertThat(actualEvents.getFirst()).isInstanceOf(event.getClass());
+    assertThat(actualEvents.getFirst()).isEqualTo(event);
+  }
+
+  private static Stream<Arguments> findBookItemById_source() {
+    BookItemAdded bookItemAdded = new BookItemAddedMother().id(BOOK_ITEM_ID).build();
+    BookItemRemoved bookItemRemoved = new BookItemRemovedMother().id(BOOK_ITEM_ID).build();
+    BookItemBorrowed bookItemBorrowed = new BookItemBorrowedMother().id(BOOK_ITEM_ID).build();
+    BookItemReturned bookItemReturned = new BookItemReturnedMother().id(BOOK_ITEM_ID).build();
+    return Stream.of(
+        Arguments.of(bookItemAdded),
+        Arguments.of(bookItemRemoved),
+        Arguments.of(bookItemBorrowed),
+        Arguments.of(bookItemReturned));
   }
 
   @Test
@@ -46,7 +83,7 @@ class BookItemRepositoryAdapterIntegrationTest {
     bookItemRepositoryAdapter.storeBookItemAddedEvent(bookItemAdded);
 
     ReadResult result =
-        eventStoreDBClient
+        kurrentDBClient
             .readStream(expectedStreamName, ReadStreamOptions.get().fromStart().notResolveLinkTos())
             .get();
     assertThat(result.getEvents()).hasSize(1);
@@ -72,7 +109,7 @@ class BookItemRepositoryAdapterIntegrationTest {
     bookItemRepositoryAdapter.storeBookItemRemovedEvent(bookItemRemoved);
 
     ReadResult result =
-        eventStoreDBClient
+        kurrentDBClient
             .readStream(expectedStreamName, ReadStreamOptions.get().fromStart().notResolveLinkTos())
             .get();
     assertThat(result.getEvents()).hasSize(1);
@@ -98,7 +135,7 @@ class BookItemRepositoryAdapterIntegrationTest {
     bookItemRepositoryAdapter.storeBookItemBorrowedEvent(bookItemBorrowed);
 
     ReadResult result =
-        eventStoreDBClient
+        kurrentDBClient
             .readStream(expectedStreamName, ReadStreamOptions.get().fromStart().notResolveLinkTos())
             .get();
     assertThat(result.getEvents()).hasSize(1);
@@ -124,7 +161,7 @@ class BookItemRepositoryAdapterIntegrationTest {
     bookItemRepositoryAdapter.storeBookItemReturnedEvent(bookItemReturned);
 
     ReadResult result =
-        eventStoreDBClient
+        kurrentDBClient
             .readStream(expectedStreamName, ReadStreamOptions.get().fromStart().notResolveLinkTos())
             .get();
     assertThat(result.getEvents()).hasSize(1);
