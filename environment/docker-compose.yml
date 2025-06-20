@@ -35,7 +35,6 @@ services:
     networks:
       - kirjavik_network
   eventstore:
-#    image: docker.kurrent.io/kurrent-latest/kurrentdb:latest
     image: kurrentplatform/kurrentdb:25.0.1-x64-8.0-bookworm-slim
     container_name: kirjavik-eventstore
     environment:
