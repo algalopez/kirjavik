@@ -1,0 +1,38 @@
+{
+  "consumer": {
+    "name": "kirjavik-havn-consumer"
+  },
+  "interactions": [
+    {
+      "description": "A request to add a book item",
+      "providerStates": [
+        {
+          "name": "scenario_add_book_item"
+        }
+      ],
+      "request": {
+        "body": {
+          "bookId": "2",
+          "id": "1",
+          "userId": "3"
+        },
+        "method": "POST",
+        "path": "/havn/book-item/"
+      },
+      "response": {
+        "status": 204
+      }
+    }
+  ],
+  "metadata": {
+    "pact-jvm": {
+      "version": "4.6.11"
+    },
+    "pactSpecification": {
+      "version": "3.0.0"
+    }
+  },
+  "provider": {
+    "name": "kirjavik-havn-provider"
+  }
+}
