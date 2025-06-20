@@ -21,6 +21,7 @@ java {
 test {
     useJUnitPlatform()
     systemProperty "java.util.logging.manager", "org.jboss.logmanager.LogManager"
+    systemProperty 'pact.consumer.enabled', 'true'
     finalizedBy jacocoTestReport
     jacoco {
         enabled = true
@@ -83,6 +84,8 @@ dependencies {
     testImplementation 'org.assertj:assertj-core:3.27.3'
     testImplementation 'net.datafaker:datafaker:2.4.3'
     testImplementation 'com.tngtech.archunit:archunit-junit5:1.4.1'
+    testImplementation 'io.quarkiverse.pact:quarkus-pact-provider:1.5.0'
+    testImplementation 'io.quarkiverse.pact:quarkus-pact-consumer:1.5.0'
 
     testCompileOnly 'org.projectlombok:lombok:1.18.38'
 
