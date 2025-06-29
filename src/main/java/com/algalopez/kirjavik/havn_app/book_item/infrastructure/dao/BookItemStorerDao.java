@@ -39,7 +39,7 @@ public class BookItemStorerDao {
   }
 
   @SneakyThrows
-  public void storeBookItemRemovedEvent(BookItemRemoved bookItemRemoved) {
+  public void storeBookItemRemovedEvent(Long previousRevision, BookItemRemoved bookItemRemoved) {
     ObjectMapper objectMapper = new ObjectMapper();
     EventData eventData =
         EventData.builderAsJson(
@@ -48,13 +48,14 @@ public class BookItemStorerDao {
                 objectMapper.writeValueAsBytes(bookItemRemoved))
             .build();
 
-    AppendToStreamOptions options = AppendToStreamOptions.get().deadline(APPEND_DEADLINE);
+    AppendToStreamOptions options =
+        AppendToStreamOptions.get().streamRevision(previousRevision).deadline(APPEND_DEADLINE);
     String streamName = bookItemRemoved.getAggregateType() + "-" + bookItemRemoved.getId();
     kurrentDBClient.appendToStream(streamName, options, eventData).get();
   }
 
   @SneakyThrows
-  public void storeBookItemBorrowedEvent(BookItemBorrowed bookItemBorrowed) {
+  public void storeBookItemBorrowedEvent(Long previousRevision, BookItemBorrowed bookItemBorrowed) {
     ObjectMapper objectMapper = new ObjectMapper();
     EventData eventData =
         EventData.builderAsJson(
@@ -63,13 +64,14 @@ public class BookItemStorerDao {
                 objectMapper.writeValueAsBytes(bookItemBorrowed))
             .build();
 
-    AppendToStreamOptions options = AppendToStreamOptions.get().deadline(APPEND_DEADLINE);
+    AppendToStreamOptions options =
+        AppendToStreamOptions.get().streamRevision(previousRevision).deadline(APPEND_DEADLINE);
     String streamName = bookItemBorrowed.getAggregateType() + "-" + bookItemBorrowed.getId();
     kurrentDBClient.appendToStream(streamName, options, eventData).get();
   }
 
   @SneakyThrows
-  public void storeBookItemReturnedEvent(BookItemReturned bookItemReturned) {
+  public void storeBookItemReturnedEvent(Long previousRevision, BookItemReturned bookItemReturned) {
     ObjectMapper objectMapper = new ObjectMapper();
     EventData eventData =
         EventData.builderAsJson(
@@ -78,7 +80,8 @@ public class BookItemStorerDao {
                 objectMapper.writeValueAsBytes(bookItemReturned))
             .build();
 
-    AppendToStreamOptions options = AppendToStreamOptions.get().deadline(APPEND_DEADLINE);
+    AppendToStreamOptions options =
+        AppendToStreamOptions.get().streamRevision(previousRevision).deadline(APPEND_DEADLINE);
     String streamName = bookItemReturned.getAggregateType() + "-" + bookItemReturned.getId();
     kurrentDBClient.appendToStream(streamName, options, eventData).get();
   }

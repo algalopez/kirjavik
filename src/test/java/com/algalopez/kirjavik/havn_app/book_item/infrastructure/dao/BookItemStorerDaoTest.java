@@ -46,6 +46,7 @@ class BookItemStorerDaoTest {
 
   @Test
   void storeBookItemRemovedEvent() {
+    Long previousRevision = 1L;
     BookItemRemoved bookItemRemoved = new BookItemRemovedMother().build();
     Mockito.when(
             eventStoreDBClient.appendToStream(
@@ -54,7 +55,7 @@ class BookItemStorerDaoTest {
                 Mockito.any(EventData.class)))
         .thenReturn(CompletableFuture.completedFuture(null));
 
-    bookItemStorerDao.storeBookItemRemovedEvent(bookItemRemoved);
+    bookItemStorerDao.storeBookItemRemovedEvent(previousRevision, bookItemRemoved);
 
     ArgumentCaptor<EventData> eventDataCaptor = ArgumentCaptor.forClass(EventData.class);
     Mockito.verify(eventStoreDBClient)
@@ -67,6 +68,7 @@ class BookItemStorerDaoTest {
 
   @Test
   void storeBookItemBorrowedEvent() {
+    Long previousRevision = 1L;
     BookItemBorrowed bookItemBorrowed = new BookItemBorrowedMother().build();
     Mockito.when(
             eventStoreDBClient.appendToStream(
@@ -75,7 +77,7 @@ class BookItemStorerDaoTest {
                 Mockito.any(EventData.class)))
         .thenReturn(CompletableFuture.completedFuture(null));
 
-    bookItemStorerDao.storeBookItemBorrowedEvent(bookItemBorrowed);
+    bookItemStorerDao.storeBookItemBorrowedEvent(previousRevision, bookItemBorrowed);
 
     ArgumentCaptor<EventData> eventDataCaptor = ArgumentCaptor.forClass(EventData.class);
     Mockito.verify(eventStoreDBClient)
@@ -88,6 +90,7 @@ class BookItemStorerDaoTest {
 
   @Test
   void storeBookItemReturnedEvent() {
+    Long previousRevision = 1L;
     BookItemReturned bookItemReturned = new BookItemReturnedMother().build();
     Mockito.when(
             eventStoreDBClient.appendToStream(
@@ -96,7 +99,7 @@ class BookItemStorerDaoTest {
                 Mockito.any(EventData.class)))
         .thenReturn(CompletableFuture.completedFuture(null));
 
-    bookItemStorerDao.storeBookItemReturnedEvent(bookItemReturned);
+    bookItemStorerDao.storeBookItemReturnedEvent(previousRevision, bookItemReturned);
 
     ArgumentCaptor<EventData> eventDataCaptor = ArgumentCaptor.forClass(EventData.class);
     Mockito.verify(eventStoreDBClient)

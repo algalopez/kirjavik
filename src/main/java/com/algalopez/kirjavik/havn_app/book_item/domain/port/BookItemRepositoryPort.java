@@ -9,9 +9,9 @@ public interface BookItemRepositoryPort {
 
   void storeBookItemAddedEvent(BookItemAdded bookItemAdded);
 
-  void storeBookItemRemovedEvent(BookItemRemoved bookItemRemoved);
+  void storeBookItemRemovedEvent(String previousUUID, BookItemRemoved bookItemRemoved);
 
-  void storeBookItemBorrowedEvent(BookItemBorrowed bookItemBorrowed);
+  void storeBookItemBorrowedEvent(String previousUUID, BookItemBorrowed bookItemBorrowed);
 
-  void storeBookItemReturnedEvent(BookItemReturned bookItemReturned);
+  void storeBookItemReturnedEvent(String previousUUID, BookItemReturned bookItemReturned);
 }

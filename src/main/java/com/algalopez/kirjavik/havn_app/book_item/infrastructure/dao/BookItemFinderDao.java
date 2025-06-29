@@ -1,6 +1,7 @@
 package com.algalopez.kirjavik.havn_app.book_item.infrastructure.dao;
 
 import com.algalopez.kirjavik.havn_app.book_item.domain.event.*;
+import com.algalopez.kirjavik.havn_app.book_item.infrastructure.model.LastEventMetadata;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.kurrent.dbclient.KurrentDBClient;
@@ -35,6 +36,19 @@ public class BookItemFinderDao {
         ReadStreamOptions.get().fromStart().notResolveLinkTos().deadline(APPEND_DEADLINE);
     ReadResult readResult = kurrentDBClient.readStream(streamName, options).get();
     return readResult.getEvents().stream().map(this::getBookItemDomainEvent).toList();
+  }
+
+  @SneakyThrows
+  public LastEventMetadata findBookItemLastEventMetadataById(String id) {
+    String streamName = BookItemDomainEvent.AGGREGATE_TYPE + "-" + id;
+    ReadStreamOptions options =
+        ReadStreamOptions.get().fromEnd().backwards().notResolveLinkTos().deadline(APPEND_DEADLINE);
+    ReadResult readResult = kurrentDBClient.readStream(streamName, options).get();
+
+    return LastEventMetadata.builder()
+        .uuid(readResult.getEvents().getFirst().getEvent().getEventId().toString())
+        .revision(readResult.getEvents().getFirst().getEvent().getRevision())
+        .build();
   }
 
   @SneakyThrows

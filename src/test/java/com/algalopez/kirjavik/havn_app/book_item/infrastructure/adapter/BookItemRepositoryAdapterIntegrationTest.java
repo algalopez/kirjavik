@@ -1,8 +1,10 @@
 package com.algalopez.kirjavik.havn_app.book_item.infrastructure.adapter;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import com.algalopez.kirjavik.havn_app.book_item.domain.event.*;
+import com.algalopez.kirjavik.havn_app.book_item.domain.exception.OptimisticConcurrencyException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -59,8 +61,7 @@ class BookItemRepositoryAdapterIntegrationTest {
         bookItemRepositoryAdapter.findBookItemEventsById(BOOK_ITEM_ID);
 
     assertThat(actualEvents).hasSize(1);
-    assertThat(actualEvents.getFirst()).isInstanceOf(event.getClass());
-    assertThat(actualEvents.getFirst()).isEqualTo(event);
+    assertThat(actualEvents.getFirst()).isInstanceOf(event.getClass()).isEqualTo(event);
   }
 
   private static Stream<Arguments> findBookItemById_source() {
@@ -103,19 +104,22 @@ class BookItemRepositoryAdapterIntegrationTest {
 
   @Test
   void storeBookItemRemovedEvent() throws ExecutionException, InterruptedException {
+    BookItemAdded previousEvent = new BookItemAddedMother().id(BOOK_ITEM_ID).build();
+    givenAPreviousEvent(previousEvent);
     BookItemRemoved bookItemRemoved = new BookItemRemovedMother().id(BOOK_ITEM_ID).build();
     String expectedStreamName = "BookItem-" + bookItemRemoved.getId();
 
-    bookItemRepositoryAdapter.storeBookItemRemovedEvent(bookItemRemoved);
+    bookItemRepositoryAdapter.storeBookItemRemovedEvent(
+        previousEvent.getEventId(), bookItemRemoved);
 
     ReadResult result =
         kurrentDBClient
             .readStream(expectedStreamName, ReadStreamOptions.get().fromStart().notResolveLinkTos())
             .get();
-    assertThat(result.getEvents()).hasSize(1);
-    assertThat(result.getEvents().getFirst().getEvent().getEventType())
+    assertThat(result.getEvents()).hasSize(2);
+    assertThat(result.getEvents().getLast().getEvent().getEventType())
         .isEqualTo(bookItemRemoved.getEventType());
-    Map<String, Object> actualEvent = mapToMap(result.getEvents().getFirst());
+    Map<String, Object> actualEvent = mapToMap(result.getEvents().getLast());
     assertThat(actualEvent)
         .containsEntry(FIELD_EVENT_ID, bookItemRemoved.getEventId())
         .containsEntry(FIELD_EVENT_TYPE, bookItemRemoved.getEventType())
@@ -128,20 +132,35 @@ class BookItemRepositoryAdapterIntegrationTest {
   }
 
   @Test
+  void storeBookItemRemovedEvent_whenOptimisticConcurrencyFails() {
+    BookItemAdded previousEvent = new BookItemAddedMother().id(BOOK_ITEM_ID).build();
+    givenAPreviousEvent(previousEvent);
+    String randomUUID = UUID.randomUUID().toString();
+    BookItemRemoved bookItemRemoved = new BookItemRemovedMother().id(BOOK_ITEM_ID).build();
+
+    assertThatExceptionOfType(OptimisticConcurrencyException.class)
+        .isThrownBy(
+            () -> bookItemRepositoryAdapter.storeBookItemRemovedEvent(randomUUID, bookItemRemoved));
+  }
+
+  @Test
   void storeBookItemBorrowedEvent() throws ExecutionException, InterruptedException {
+    BookItemAdded previousEvent = new BookItemAddedMother().id(BOOK_ITEM_ID).build();
+    givenAPreviousEvent(previousEvent);
     BookItemBorrowed bookItemBorrowed = new BookItemBorrowedMother().id(BOOK_ITEM_ID).build();
     String expectedStreamName = "BookItem-" + bookItemBorrowed.getId();
 
-    bookItemRepositoryAdapter.storeBookItemBorrowedEvent(bookItemBorrowed);
+    bookItemRepositoryAdapter.storeBookItemBorrowedEvent(
+        previousEvent.getEventId(), bookItemBorrowed);
 
     ReadResult result =
         kurrentDBClient
             .readStream(expectedStreamName, ReadStreamOptions.get().fromStart().notResolveLinkTos())
             .get();
-    assertThat(result.getEvents()).hasSize(1);
-    assertThat(result.getEvents().getFirst().getEvent().getEventType())
+    assertThat(result.getEvents()).hasSize(2);
+    assertThat(result.getEvents().getLast().getEvent().getEventType())
         .isEqualTo(bookItemBorrowed.getEventType());
-    Map<String, Object> actualEvent = mapToMap(result.getEvents().getFirst());
+    Map<String, Object> actualEvent = mapToMap(result.getEvents().getLast());
     assertThat(actualEvent)
         .containsEntry(FIELD_EVENT_ID, bookItemBorrowed.getEventId())
         .containsEntry(FIELD_EVENT_TYPE, bookItemBorrowed.getEventType())
@@ -154,20 +173,36 @@ class BookItemRepositoryAdapterIntegrationTest {
   }
 
   @Test
+  void storeBookItemBorrowedEvent_whenOptimisticConcurrencyFails() {
+    BookItemAdded previousEvent = new BookItemAddedMother().id(BOOK_ITEM_ID).build();
+    givenAPreviousEvent(previousEvent);
+    String randomUUID = UUID.randomUUID().toString();
+    BookItemBorrowed bookItemBorrowed = new BookItemBorrowedMother().id(BOOK_ITEM_ID).build();
+
+    assertThatExceptionOfType(OptimisticConcurrencyException.class)
+        .isThrownBy(
+            () ->
+                bookItemRepositoryAdapter.storeBookItemBorrowedEvent(randomUUID, bookItemBorrowed));
+  }
+
+  @Test
   void storeBookItemReturnedEvent() throws ExecutionException, InterruptedException {
+    BookItemAdded previousEvent = new BookItemAddedMother().id(BOOK_ITEM_ID).build();
+    givenAPreviousEvent(previousEvent);
     BookItemReturned bookItemReturned = new BookItemReturnedMother().id(BOOK_ITEM_ID).build();
     String expectedStreamName = "BookItem-" + bookItemReturned.getId();
 
-    bookItemRepositoryAdapter.storeBookItemReturnedEvent(bookItemReturned);
+    bookItemRepositoryAdapter.storeBookItemReturnedEvent(
+        previousEvent.getEventId(), bookItemReturned);
 
     ReadResult result =
         kurrentDBClient
             .readStream(expectedStreamName, ReadStreamOptions.get().fromStart().notResolveLinkTos())
             .get();
-    assertThat(result.getEvents()).hasSize(1);
-    assertThat(result.getEvents().getFirst().getEvent().getEventType())
+    assertThat(result.getEvents()).hasSize(2);
+    assertThat(result.getEvents().getLast().getEvent().getEventType())
         .isEqualTo(bookItemReturned.getEventType());
-    Map<String, Object> actualEvent = mapToMap(result.getEvents().getFirst());
+    Map<String, Object> actualEvent = mapToMap(result.getEvents().getLast());
     assertThat(actualEvent)
         .containsEntry(FIELD_EVENT_ID, bookItemReturned.getEventId())
         .containsEntry(FIELD_EVENT_TYPE, bookItemReturned.getEventType())
@@ -177,6 +212,31 @@ class BookItemRepositoryAdapterIntegrationTest {
         .containsEntry(FIELD_ID, bookItemReturned.getId())
         .containsEntry(FIELD_BOOK_ID, bookItemReturned.getBookId())
         .containsEntry(FIELD_USER_ID, bookItemReturned.getUserId());
+  }
+
+  @Test
+  void storeBookItemReturnedEvent_whenOptimisticConcurrencyFails() {
+    BookItemAdded previousEvent = new BookItemAddedMother().id(BOOK_ITEM_ID).build();
+    givenAPreviousEvent(previousEvent);
+    String randomUUID = UUID.randomUUID().toString();
+    BookItemReturned bookItemReturned = new BookItemReturnedMother().id(BOOK_ITEM_ID).build();
+
+    assertThatExceptionOfType(OptimisticConcurrencyException.class)
+        .isThrownBy(
+            () ->
+                bookItemRepositoryAdapter.storeBookItemReturnedEvent(randomUUID, bookItemReturned));
+  }
+
+  @SneakyThrows
+  private void givenAPreviousEvent(BookItemAdded event) {
+    ObjectMapper objectMapper = new ObjectMapper();
+    EventData eventData =
+        EventData.builderAsJson(
+                UUID.fromString(event.getEventId()),
+                event.getEventType(),
+                objectMapper.writeValueAsBytes(event))
+            .build();
+    kurrentDBClient.appendToStream("BookItem-" + BOOK_ITEM_ID, eventData).get();
   }
 
   @SneakyThrows
