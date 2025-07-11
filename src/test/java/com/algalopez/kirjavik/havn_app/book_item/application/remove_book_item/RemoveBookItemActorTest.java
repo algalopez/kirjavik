@@ -1,10 +1,12 @@
-package com.algalopez.kirjavik.havn_app.book_item.application.add_book_item;
+package com.algalopez.kirjavik.havn_app.book_item.application.remove_book_item;
 
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
-import com.algalopez.kirjavik.havn_app.book_item.domain.event.BookItemAdded;
 import com.algalopez.kirjavik.havn_app.book_item.domain.event.BookItemAddedMother;
+import com.algalopez.kirjavik.havn_app.book_item.domain.event.BookItemBorrowedMother;
+import com.algalopez.kirjavik.havn_app.book_item.domain.event.BookItemRemoved;
 import com.algalopez.kirjavik.havn_app.book_item.domain.port.BookItemRepositoryPort;
+import com.algalopez.kirjavik.havn_app.book_item.domain.service.BookItemReplayService;
 import com.algalopez.kirjavik.shared.domain.service.DomainMetadataService;
 import java.util.List;
 import java.util.stream.Stream;
@@ -16,18 +18,20 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mapstruct.factory.Mappers;
 import org.mockito.Mockito;
 
-class AddBookItemActorTest {
+class RemoveBookItemActorTest {
 
   private BookItemRepositoryPort bookItemRepository;
-  private AddBookItemActor addBookItemActor;
+  private RemoveBookItemActor removeBookItemActor;
 
   @BeforeEach
   void setUp() {
+    BookItemReplayService bookItemReplayService = new BookItemReplayService();
     bookItemRepository = Mockito.mock(BookItemRepositoryPort.class);
     DomainMetadataService domainMetadataService = Mockito.mock(DomainMetadataService.class);
-    AddBookItemMapper addBookItemMapper = Mappers.getMapper(AddBookItemMapper.class);
-    addBookItemMapper.domainMetadataService = domainMetadataService;
-    addBookItemActor = new AddBookItemActor(addBookItemMapper, bookItemRepository);
+    RemoveBookItemMapper removeBookItemMapper = Mappers.getMapper(RemoveBookItemMapper.class);
+    removeBookItemMapper.domainMetadataService = domainMetadataService;
+    removeBookItemActor =
+        new RemoveBookItemActor(bookItemReplayService, removeBookItemMapper, bookItemRepository);
 
     Mockito.when(domainMetadataService.generateEventDateTime()).thenReturn("2025-01-02T03:04:05");
     Mockito.when(domainMetadataService.generateEventId())
@@ -37,31 +41,32 @@ class AddBookItemActorTest {
   @Test
   void command() {
     Mockito.when(bookItemRepository.findBookItemEventsById(Mockito.anyString()))
-        .thenReturn(List.of());
-    AddBookItemCommand command =
-        AddBookItemCommand.builder()
+        .thenReturn(List.of(new BookItemAddedMother().build()));
+    RemoveBookItemCommand command =
+        RemoveBookItemCommand.builder()
             .id("123e4567-e89b-12d3-a456-426614174000")
             .bookId("123e4567-e89b-12d3-a456-426614174001")
             .userId("123e4567-e89b-12d3-a456-426614174002")
             .build();
 
-    addBookItemActor.command(command);
+    removeBookItemActor.command(command);
 
-    Mockito.verify(bookItemRepository).storeBookItemAddedEvent(Mockito.any(BookItemAdded.class));
+    Mockito.verify(bookItemRepository)
+        .storeBookItemRemovedEvent(Mockito.anyString(), Mockito.any(BookItemRemoved.class));
   }
 
   @MethodSource("command_whenInvalidRequest_source")
   @ParameterizedTest
   void command_whenInvalidRequest(String bookId, String userId) {
-    AddBookItemCommand command =
-        AddBookItemCommand.builder()
+    RemoveBookItemCommand command =
+        RemoveBookItemCommand.builder()
             .id("123e4567-e89b-12d3-a456-426614174000")
             .bookId(bookId)
             .userId(userId)
             .build();
 
     assertThatExceptionOfType(IllegalArgumentException.class)
-        .isThrownBy(() -> addBookItemActor.command(command));
+        .isThrownBy(() -> removeBookItemActor.command(command));
 
     Mockito.verifyNoInteractions(bookItemRepository);
   }
@@ -73,20 +78,18 @@ class AddBookItemActorTest {
   }
 
   @Test
-  void command_whenNotFirstEvent() {
+  void command_whenInvalidState() {
     Mockito.when(bookItemRepository.findBookItemEventsById(Mockito.anyString()))
-        .thenReturn(List.of(new BookItemAddedMother().build()));
-    AddBookItemCommand command =
-        AddBookItemCommand.builder()
+        .thenReturn(
+            List.of(new BookItemAddedMother().build(), new BookItemBorrowedMother().build()));
+    RemoveBookItemCommand command =
+        RemoveBookItemCommand.builder()
             .id("123e4567-e89b-12d3-a456-426614174000")
             .bookId("123e4567-e89b-12d3-a456-426614174001")
             .userId("123e4567-e89b-12d3-a456-426614174002")
             .build();
 
     assertThatExceptionOfType(IllegalArgumentException.class)
-        .isThrownBy(() -> addBookItemActor.command(command));
-
-    Mockito.verify(bookItemRepository, Mockito.never())
-        .storeBookItemAddedEvent(Mockito.any(BookItemAdded.class));
+        .isThrownBy(() -> removeBookItemActor.command(command));
   }
 }
