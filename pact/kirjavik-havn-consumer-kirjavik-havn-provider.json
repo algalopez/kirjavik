@@ -17,7 +17,7 @@
           "userId": "3"
         },
         "method": "POST",
-        "path": "/havn/book-item/"
+        "path": "/havn/book-item/add"
       },
       "response": {
         "status": 204

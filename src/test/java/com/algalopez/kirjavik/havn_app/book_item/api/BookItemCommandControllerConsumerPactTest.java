@@ -29,7 +29,7 @@ public class BookItemCommandControllerConsumerPactTest {
     return builder
         .given("scenario_add_book_item")
         .uponReceiving("A request to add a book item")
-        .path("/havn/book-item/")
+        .path("/havn/book-item/add")
         .method("POST")
         .body(
             """
@@ -60,7 +60,7 @@ public class BookItemCommandControllerConsumerPactTest {
                }
                """)
         .when()
-        .post("/havn/book-item/")
+        .post("/havn/book-item/add")
         .then()
         .statusCode(204);
   }
