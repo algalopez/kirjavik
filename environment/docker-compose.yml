@@ -53,10 +53,22 @@ services:
       - type: volume
         source: kurrentdb-volume-logs
         target: /var/log/kurrentdb
+  rabbitmq:
+    image: rabbitmq:4.1.3-management
+    container_name: kirjavik-rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: "user"
+      RABBITMQ_DEFAULT_PASS: "pass"
+    ports:
+      - "34606:5672"
+      - "34607:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
 volumes:
   data:
   kurrentdb-volume-data:
   kurrentdb-volume-logs:
+  rabbitmq_data:
 networks:
   kirjavik_network:
     name: kirjavik_network

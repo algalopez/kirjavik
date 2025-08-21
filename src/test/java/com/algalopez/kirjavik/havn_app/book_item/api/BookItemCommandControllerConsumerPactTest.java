@@ -21,7 +21,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
     named = "pact.consumer.enabled",
     matches = "true",
     disabledReason = "pact.consumer.enabled system property not set to true")
-public class BookItemCommandControllerConsumerPactTest {
+class BookItemCommandControllerConsumerPactTest {
 
   @Pact(provider = "kirjavik-havn-provider", consumer = "kirjavik-havn-consumer")
   RequestResponsePact createPact(PactDslWithProvider builder) {

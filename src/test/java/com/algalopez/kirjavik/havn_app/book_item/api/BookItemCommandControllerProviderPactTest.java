@@ -21,7 +21,7 @@ import org.mockito.Mockito;
 @QuarkusTest
 @Provider("kirjavik-havn-provider")
 @PactFolder("pact")
-public class BookItemCommandControllerProviderPactTest {
+class BookItemCommandControllerProviderPactTest {
   private static final String SCENARIO_ADD_BOOK_ITEM = "scenario_add_book_item";
 
   @ConfigProperty(name = "quarkus.http.test-port")

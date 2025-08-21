@@ -65,7 +65,9 @@ dependencies {
 
     implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
     implementation 'io.quarkus:quarkus-rest-jackson'
-    implementation("io.quarkus:quarkus-hibernate-orm")
+    implementation 'io.quarkus:quarkus-hibernate-orm'
+    implementation 'io.quarkus:quarkus-messaging'
+    implementation 'io.quarkus:quarkus-messaging-rabbitmq'
     implementation 'io.quarkus:quarkus-jdbc-mariadb'
     implementation 'io.quarkus:quarkus-smallrye-openapi'
     implementation 'io.quarkus:quarkus-arc'
@@ -104,7 +106,7 @@ sonar {
         property 'sonar.exclusions', '**/Application.java'
         property 'sonar.coverage.exclusions', '**/Application.java'
         property 'sonar.host.url', 'http://localhost:34601'
-        property 'sonar.token', 'sqa_b008539686a28ecd76f91bc1018f9c3e0e20ebed'
+        property 'sonar.token', 'sqa_8095fc48393fc6723878a6f839720af669a55058'
         property "sonar.coverage.jacoco.xmlReportPaths", "${projectDir}/build/reports/jacoco/test/jacocoTestReport.xml"
     }
 }
