@@ -18,7 +18,7 @@ import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
-@Tag(name = "Haven-BookItem")
+@Tag(name = "Havn-BookItem")
 @RequiredArgsConstructor
 @Path("/havn/book-item/")
 @Produces(MediaType.APPLICATION_JSON)

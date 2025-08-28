@@ -1,0 +1,36 @@
+package com.algalopez.kirjavik.havn_app.book_review.domain.model;
+
+import java.math.BigDecimal;
+import java.util.UUID;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+import net.datafaker.Faker;
+
+@Accessors(fluent = true)
+@Setter
+public class BookReviewViewMother {
+  private Long id;
+  private UUID bookId;
+  private UUID userId;
+  private BigDecimal score;
+  private String description;
+
+  public BookReviewViewMother() {
+    var faker = new Faker();
+    this.id = faker.number().numberBetween(1L, 10_000_000L);
+    this.bookId = UUID.fromString(faker.internet().uuidv7());
+    this.userId = UUID.fromString(faker.internet().uuidv7());
+    this.score = BigDecimal.valueOf(faker.number().numberBetween(0, 100) / 10.0);
+    this.description = faker.lorem().sentence();
+  }
+
+  public BookReviewView build() {
+    return BookReviewView.builder()
+        .id(id)
+        .bookId(bookId)
+        .userId(userId)
+        .score(score)
+        .description(description)
+        .build();
+  }
+}
