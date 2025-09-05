@@ -17,6 +17,6 @@ public class BookReviewUpdated extends DomainEvent {
   private final Long id;
   private final UUID bookId;
   private final UUID userId;
-  private final BigDecimal score;
-  private final String description;
+  private final BigDecimal rating;
+  private final String comment;
 }

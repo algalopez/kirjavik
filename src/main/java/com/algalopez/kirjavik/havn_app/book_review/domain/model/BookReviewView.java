@@ -6,4 +6,4 @@ import lombok.Builder;
 
 @Builder
 public record BookReviewView(
-    Long id, UUID bookId, UUID userId, BigDecimal score, String description) {}
+        Long id, UUID bookId, String bookTitle, UUID userId, BigDecimal rating, String comment) {}

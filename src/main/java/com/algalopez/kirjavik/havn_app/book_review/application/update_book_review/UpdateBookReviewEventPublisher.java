@@ -25,8 +25,8 @@ public class UpdateBookReviewEventPublisher {
             .id(bookReview.getId())
             .bookId(bookReview.getBookId())
             .userId(bookReview.getUserId())
-            .score(bookReview.getScore())
-            .description(bookReview.getDescription())
+            .rating(bookReview.getRating())
+            .comment(bookReview.getComment())
             .build();
 
     eventBusPort.publish(bookReviewUpdated);

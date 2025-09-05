@@ -5,4 +5,4 @@ import lombok.Builder;
 
 @Builder
 public record CreateBookReviewCommand(
-    String bookId, String userId, BigDecimal score, String description) {}
+        String bookId, String userId, BigDecimal rating, String comment) {}

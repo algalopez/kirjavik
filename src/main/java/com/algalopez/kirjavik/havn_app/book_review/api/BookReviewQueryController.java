@@ -44,8 +44,9 @@ public class BookReviewQueryController {
   @GET
   @Path("/")
   public GetAllBookReviewResponse getAllBookReviewsByCriteria(
-      @QueryParam("bookId") String bookId, @PathParam("userId") String userId) {
-    GetAllBookReviewQuery query = GetAllBookReviewQuery.builder().build();
+      @QueryParam("bookId") String bookId, @QueryParam("userId") String userId) {
+    GetAllBookReviewQuery query =
+        GetAllBookReviewQuery.builder().bookId(bookId).userId(userId).build();
     return getAllBookReviewActor.query(query);
   }
 }

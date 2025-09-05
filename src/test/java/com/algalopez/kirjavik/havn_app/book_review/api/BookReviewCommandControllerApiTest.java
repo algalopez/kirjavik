@@ -32,8 +32,8 @@ class BookReviewCommandControllerApiTest {
         {
             "bookId": "0a23fb4b-1d19-48a3-b6a0-f6f1c9ff89d5",
             "userId": "7f6ae369-1e27-40bb-8685-87bc45588c75",
-            "score": 3.4,
-            "description": "Description of the book review"
+            "rating": 3.4,
+            "comment": "Description of the book review"
         }
         """;
 
@@ -52,8 +52,8 @@ class BookReviewCommandControllerApiTest {
             CreateBookReviewCommand.builder()
                 .bookId("0a23fb4b-1d19-48a3-b6a0-f6f1c9ff89d5")
                 .userId("7f6ae369-1e27-40bb-8685-87bc45588c75")
-                .score(BigDecimal.valueOf(3.4))
-                .description("Description of the book review")
+                .rating(BigDecimal.valueOf(3.4))
+                .comment("Description of the book review")
                 .build());
   }
 
@@ -68,8 +68,8 @@ class BookReviewCommandControllerApiTest {
             "id": 2,
             "bookId": "0a23fb4b-1d19-48a3-b6a0-f6f1c9ff89d5",
             "userId": "7f6ae369-1e27-40bb-8685-87bc45588c75",
-            "score": 3.4,
-            "description": "Description of the book review"
+            "rating": 3.4,
+            "comment": "Description of the book review"
         }
         """;
 
@@ -90,8 +90,8 @@ class BookReviewCommandControllerApiTest {
                 .id(1L)
                 .bookId("0a23fb4b-1d19-48a3-b6a0-f6f1c9ff89d5")
                 .userId("7f6ae369-1e27-40bb-8685-87bc45588c75")
-                .score(BigDecimal.valueOf(3.4))
-                .description("Description of the book review")
+                .rating(BigDecimal.valueOf(3.4))
+                .comment("Description of the book review")
                 .build());
   }
 

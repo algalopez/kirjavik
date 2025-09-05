@@ -9,5 +9,5 @@ public record GetAllBookReviewResponse(List<BookReview> bookReviews) {
 
   @Builder
   public record BookReview(
-      Long id, String bookId, String userId, BigDecimal score, String description) {}
+      Long id, String bookId, String bookTitle, String userId, BigDecimal rating, String comment) {}
 }

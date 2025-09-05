@@ -56,8 +56,8 @@ class CreateBookReviewActorTest {
     return CreateBookReviewCommand.builder()
         .bookId(UUID.randomUUID().toString())
         .userId(UUID.randomUUID().toString())
-        .score(BigDecimal.valueOf(5.1))
-        .description("Great book!")
+        .rating(BigDecimal.valueOf(5.1))
+        .comment("Great book!")
         .build();
   }
 }

@@ -6,6 +6,10 @@ services:
       - "34601:9000"
     networks:
       - kirjavik_network
+    volumes:
+      - sonarqube_data:/opt/sonarqube/data
+      - sonarqube_extensions:/opt/sonarqube/extensions
+      - sonarqube_logs:/opt/sonarqube/logs
   db:
     image: mariadb:11.7.2
     container_name: kirjavik-db
@@ -15,7 +19,7 @@ services:
       MYSQL_USER: user
       MYSQL_PASSWORD: password
     volumes:
-      - data:/var/lib/mysql
+      - db_data:/var/lib/mysql
     ports:
       - "34602:3306"
     networks:
@@ -65,7 +69,10 @@ services:
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
 volumes:
-  data:
+  db_data:
+  sonarqube_data:
+  sonarqube_extensions:
+  sonarqube_logs:
   kurrentdb-volume-data:
   kurrentdb-volume-logs:
   rabbitmq_data:

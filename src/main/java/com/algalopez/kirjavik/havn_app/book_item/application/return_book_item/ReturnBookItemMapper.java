@@ -10,7 +10,10 @@ import org.mapstruct.MappingConstants;
 @Mapper(componentModel = MappingConstants.ComponentModel.JAKARTA_CDI)
 public abstract class ReturnBookItemMapper {
 
-  @Inject DomainMetadataService domainMetadataService;
+  // Can't use construction injection due to mapstruct limitations
+  @SuppressWarnings("java:S6813")
+  @Inject
+  DomainMetadataService domainMetadataService;
 
   @Mapping(target = "eventId", expression = "java(domainMetadataService.generateEventId())")
   @Mapping(target = "dateTime", expression = "java(domainMetadataService.generateEventDateTime())")

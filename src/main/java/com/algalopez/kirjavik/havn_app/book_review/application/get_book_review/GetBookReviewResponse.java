@@ -4,8 +4,10 @@ import java.math.BigDecimal;
 import lombok.Builder;
 
 @Builder
-public record GetBookReviewResponse(BookReview bookReview) {
-  @Builder
-  public record BookReview(
-      Long id, String bookId, String userId, BigDecimal score, String description) {}
-}
+public record GetBookReviewResponse(
+    Long id,
+    String bookId,
+    String bookTitle,
+    String userId,
+    BigDecimal rating,
+    String comment) {}

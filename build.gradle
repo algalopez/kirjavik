@@ -106,7 +106,7 @@ sonar {
         property 'sonar.exclusions', '**/Application.java'
         property 'sonar.coverage.exclusions', '**/Application.java'
         property 'sonar.host.url', 'http://localhost:34601'
-        property 'sonar.token', 'sqa_8095fc48393fc6723878a6f839720af669a55058'
+        property 'sonar.token', 'sqa_f9ff61cef81c80873f797d7c50c27a1cd70ae923'
         property "sonar.coverage.jacoco.xmlReportPaths", "${projectDir}/build/reports/jacoco/test/jacocoTestReport.xml"
     }
 }

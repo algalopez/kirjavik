@@ -19,8 +19,8 @@ class UpdateBookReviewMapperTest {
             .id(1L)
             .bookId("42742763-5c42-4926-b0fe-c5aa229d1138")
             .userId("5f9380eb-4d5f-4e9a-9110-f7c5acc85dbb")
-            .score(BigDecimal.valueOf(8.3))
-            .description("description")
+            .rating(BigDecimal.valueOf(8.3))
+            .comment("comment")
             .build();
 
     BookReview actualBookReview = mapper.mapToDomain(command);
@@ -31,8 +31,8 @@ class UpdateBookReviewMapperTest {
                 .id(1L)
                 .bookId(UUID.fromString("42742763-5c42-4926-b0fe-c5aa229d1138"))
                 .userId(UUID.fromString("5f9380eb-4d5f-4e9a-9110-f7c5acc85dbb"))
-                .score(BigDecimal.valueOf(8.3))
-                .description("description")
+                .rating(BigDecimal.valueOf(8.3))
+                .comment("comment")
                 .build());
   }
 }

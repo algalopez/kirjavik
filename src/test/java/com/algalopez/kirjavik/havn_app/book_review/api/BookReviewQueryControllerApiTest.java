@@ -12,6 +12,7 @@ import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.filter.log.LogDetail;
 import java.math.BigDecimal;
+import java.util.List;
 import org.hamcrest.core.Is;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -26,63 +27,69 @@ class BookReviewQueryControllerApiTest {
   void getBookReviewByBookAndUser() {
     GetBookReviewResponse response =
         GetBookReviewResponse.builder()
-            .bookReview(
-                GetBookReviewResponse.BookReview.builder()
-                    .id(1L)
-                    .bookId("bookId")
-                    .userId("userId")
-                    .score(BigDecimal.valueOf(2.2))
-                    .description("description1")
-                    .build())
+            .id(1L)
+            .bookId("bookId")
+            .userId("userId")
+            .rating(BigDecimal.valueOf(2.2))
+            .comment("comment")
             .build();
     Mockito.when(getBookReviewActor.query(Mockito.any(GetBookReviewQuery.class)))
         .thenReturn(response);
 
     given()
         .contentType("application/json")
-        .pathParam("id", "1")
+        .pathParam("bookId", "1")
+        .pathParam("userId", "2")
         .when()
         .get("/havn/book-review/book/{bookId}/user/{userId}")
         .then()
         .log()
         .ifValidationFails(LogDetail.BODY)
         .statusCode(200)
-        .body("bookReview.id", Is.is("1"))
-        .body("bookReview.bookId", Is.is("isbn"))
-        .body("bookReview.userId", Is.is("title"))
-        .body("bookReview.score", Is.is("author"))
-        .body("bookReview.description", Is.is(400));
+        .body("id", Is.is(1))
+        .body("bookId", Is.is("bookId"))
+        .body("userId", Is.is("userId"))
+        .body("rating.toString()", Is.is("2.2"))
+        .body("comment", Is.is("comment"));
+
+    Mockito.verify(getBookReviewActor)
+        .query(GetBookReviewQuery.builder().bookId("1").userId("2").build());
   }
 
   @Test
   void getAllBookReviewsByCriteria() {
     GetAllBookReviewResponse response =
-        GetBookReviewResponse.builder()
-            .id("1")
-            .isbn("isbn")
-            .title("title")
-            .author("author")
-            .pageCount(400)
-            .year(2000)
+        GetAllBookReviewResponse.builder()
+            .bookReviews(
+                List.of(
+                    GetAllBookReviewResponse.BookReview.builder()
+                        .id(1L)
+                        .bookId("bookId")
+                        .userId("userId")
+                        .rating(BigDecimal.valueOf(2.2))
+                        .comment("comment")
+                        .build()))
             .build();
     Mockito.when(getAllBookReviewActor.query(Mockito.any(GetAllBookReviewQuery.class)))
         .thenReturn(response);
 
     given()
         .contentType("application/json")
-        .queryParam("id", "1")
-        .queryParam("id", "1")
+        .queryParam("bookId", "1")
+        .queryParam("userId", "2")
         .when()
         .get("/havn/book-review")
         .then()
         .log()
         .ifValidationFails(LogDetail.BODY)
         .statusCode(200)
-        .body("id", Is.is("1"))
-        .body("isbn", Is.is("isbn"))
-        .body("title", Is.is("title"))
-        .body("author", Is.is("author"))
-        .body("pageCount", Is.is(400))
-        .body("year", Is.is(2000));
+        .body("bookReviews[0].id", Is.is(1))
+        .body("bookReviews[0].bookId", Is.is("bookId"))
+        .body("bookReviews[0].userId", Is.is("userId"))
+        .body("bookReviews[0].rating.toString()", Is.is("2.2"))
+        .body("bookReviews[0].comment", Is.is("comment"));
+
+    Mockito.verify(getAllBookReviewActor)
+        .query(GetAllBookReviewQuery.builder().bookId("1").userId("2").build());
   }
 }

@@ -11,6 +11,6 @@ public class BookReview {
   private Long id;
   private UUID bookId;
   private UUID userId;
-  private BigDecimal score;
-  private String description;
+  private BigDecimal rating;
+  private String comment;
 }

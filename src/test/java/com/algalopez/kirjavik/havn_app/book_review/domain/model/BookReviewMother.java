@@ -12,16 +12,16 @@ public class BookReviewMother {
   private Long id;
   private UUID bookId;
   private UUID userId;
-  private BigDecimal score;
-  private String description;
+  private BigDecimal rating;
+  private String comment;
 
   public BookReviewMother() {
     var faker = new Faker();
     this.id = faker.number().numberBetween(1L, 10_000_000L);
     this.bookId = UUID.fromString(faker.internet().uuidv7());
     this.userId = UUID.fromString(faker.internet().uuidv7());
-    this.score = BigDecimal.valueOf(faker.number().numberBetween(0, 100) / 10.0);
-    this.description = faker.lorem().sentence();
+    this.rating = BigDecimal.valueOf(faker.number().numberBetween(0, 100) / 10.0);
+    this.comment = faker.lorem().sentence();
   }
 
   public BookReview build() {
@@ -29,8 +29,8 @@ public class BookReviewMother {
         .id(id)
         .bookId(bookId)
         .userId(userId)
-        .score(score)
-        .description(description)
+        .rating(rating)
+        .comment(comment)
         .build();
   }
 }
