@@ -1,16 +1,23 @@
-package com.algalopez.kirjavik.shared.infrastructure;
+package com.algalopez.kirjavik.backoffice_app.shared.infrastructure;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 
 import com.algalopez.kirjavik.shared.domain.model.DomainEvent;
+import com.algalopez.kirjavik.shared.infrastructure.RabbitMqTestClient;
+import io.quarkus.test.junit.QuarkusTest;
+import jakarta.inject.Inject;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
+import lombok.extern.jackson.Jacksonized;
 import org.junit.jupiter.api.Test;
 
+@QuarkusTest
 class EventBusAdapterTest {
 
-  private final EventBusAdapter eventBusAdapter = new EventBusAdapter();
+  @Inject EventBusAdapter eventBusAdapter;
+  @Inject RabbitMqTestClient rabbitMqTestClient;
 
   @Test
   void publish() {
@@ -21,15 +28,21 @@ class EventBusAdapterTest {
             .aggregateId("aggregateId")
             .aggregateType("aggregateType")
             .dateTime("dateTime")
-            .payload("payload")
+            .payload("payload2")
             .build();
 
     assertThatNoException().isThrownBy(() -> eventBusAdapter.publish(sampleEvent));
+
+    SampleEvent publishedEvent =
+        rabbitMqTestClient.consumeSingleMessage(
+            "kirjavik.backoffice.domain-events", "#", "test-queue", 2, SampleEvent.class);
+    assertThat(publishedEvent).isEqualTo(sampleEvent);
   }
 
   @ToString(callSuper = true)
   @Getter
   @SuperBuilder
+  @Jacksonized
   private static class SampleEvent extends DomainEvent {
 
     private final String payload;

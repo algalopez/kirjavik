@@ -1,7 +1,7 @@
 package com.algalopez.kirjavik.backoffice_app.user.application.delete_user;
 
 import com.algalopez.kirjavik.backoffice_app.user.domain.event.UserDeleted;
-import com.algalopez.kirjavik.shared.application.EventBusPort;
+import com.algalopez.kirjavik.backoffice_app.shared.domain.port.EventBusPort;
 import com.algalopez.kirjavik.shared.domain.service.DomainMetadataService;
 import jakarta.enterprise.context.ApplicationScoped;
 import java.util.UUID;

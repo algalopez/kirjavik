@@ -7,7 +7,7 @@ import com.algalopez.kirjavik.backoffice_app.user.domain.exception.UserNotFoundE
 import com.algalopez.kirjavik.backoffice_app.user.domain.model.User;
 import com.algalopez.kirjavik.backoffice_app.user.domain.model.UserMother;
 import com.algalopez.kirjavik.backoffice_app.user.domain.port.UserRepositoryPort;
-import com.algalopez.kirjavik.shared.application.EventBusPort;
+import com.algalopez.kirjavik.backoffice_app.shared.domain.port.EventBusPort;
 import com.algalopez.kirjavik.shared.domain.service.DomainMetadataService;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;

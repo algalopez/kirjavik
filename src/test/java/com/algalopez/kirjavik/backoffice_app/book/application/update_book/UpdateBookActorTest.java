@@ -7,7 +7,7 @@ import com.algalopez.kirjavik.backoffice_app.book.domain.exception.BookNotFoundE
 import com.algalopez.kirjavik.backoffice_app.book.domain.model.Book;
 import com.algalopez.kirjavik.backoffice_app.book.domain.model.BookMother;
 import com.algalopez.kirjavik.backoffice_app.book.domain.port.BookRepositoryPort;
-import com.algalopez.kirjavik.shared.application.EventBusPort;
+import com.algalopez.kirjavik.backoffice_app.shared.domain.port.EventBusPort;
 import com.algalopez.kirjavik.shared.domain.service.DomainMetadataService;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;

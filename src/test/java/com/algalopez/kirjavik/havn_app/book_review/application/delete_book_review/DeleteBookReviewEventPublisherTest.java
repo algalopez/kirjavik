@@ -1,7 +1,7 @@
 package com.algalopez.kirjavik.havn_app.book_review.application.delete_book_review;
 
 import com.algalopez.kirjavik.havn_app.book_review.domain.event.BookReviewDeleted;
-import com.algalopez.kirjavik.shared.application.EventBusPort;
+import com.algalopez.kirjavik.havn_app.shared.domain.port.EventBusPort;
 import com.algalopez.kirjavik.shared.domain.port.DateTimeProviderPort;
 import com.algalopez.kirjavik.shared.domain.port.UuidProviderPort;
 import com.algalopez.kirjavik.shared.domain.service.DomainMetadataService;

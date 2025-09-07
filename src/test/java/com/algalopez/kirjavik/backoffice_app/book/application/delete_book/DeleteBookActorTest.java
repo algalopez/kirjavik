@@ -3,7 +3,7 @@ package com.algalopez.kirjavik.backoffice_app.book.application.delete_book;
 import java.util.UUID;
 import com.algalopez.kirjavik.backoffice_app.book.domain.event.BookDeleted;
 import com.algalopez.kirjavik.backoffice_app.book.domain.port.BookRepositoryPort;
-import com.algalopez.kirjavik.shared.application.EventBusPort;
+import com.algalopez.kirjavik.backoffice_app.shared.domain.port.EventBusPort;
 import com.algalopez.kirjavik.shared.domain.service.DomainMetadataService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -2,7 +2,7 @@ package com.algalopez.kirjavik.havn_app.book_review.application.delete_book_revi
 
 import com.algalopez.kirjavik.havn_app.book_review.domain.event.BookReviewDeleted;
 import com.algalopez.kirjavik.havn_app.book_review.domain.port.BookReviewRepositoryPort;
-import com.algalopez.kirjavik.shared.application.EventBusPort;
+import com.algalopez.kirjavik.havn_app.shared.domain.port.EventBusPort;
 import com.algalopez.kirjavik.shared.domain.service.DomainMetadataService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -4,7 +4,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import com.algalopez.kirjavik.backoffice_app.book.domain.event.BookDeleted;
-import com.algalopez.kirjavik.shared.application.EventBusPort;
+import com.algalopez.kirjavik.backoffice_app.shared.domain.port.EventBusPort;
 import com.algalopez.kirjavik.shared.domain.service.DomainMetadataService;
 
 @RequiredArgsConstructor

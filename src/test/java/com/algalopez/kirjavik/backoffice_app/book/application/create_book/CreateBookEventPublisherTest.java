@@ -3,7 +3,7 @@ package com.algalopez.kirjavik.backoffice_app.book.application.create_book;
 import com.algalopez.kirjavik.backoffice_app.book.domain.event.BookCreated;
 import com.algalopez.kirjavik.backoffice_app.book.domain.model.Book;
 import com.algalopez.kirjavik.backoffice_app.book.domain.model.BookMother;
-import com.algalopez.kirjavik.shared.application.EventBusPort;
+import com.algalopez.kirjavik.backoffice_app.shared.domain.port.EventBusPort;
 import com.algalopez.kirjavik.shared.domain.port.DateTimeProviderPort;
 import com.algalopez.kirjavik.shared.domain.port.UuidProviderPort;
 import com.algalopez.kirjavik.shared.domain.service.DomainMetadataService;

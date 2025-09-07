@@ -1,4 +1,4 @@
-package com.algalopez.kirjavik.shared.application;
+package com.algalopez.kirjavik.backoffice_app.shared.domain.port;
 
 import com.algalopez.kirjavik.shared.domain.model.DomainEvent;
 

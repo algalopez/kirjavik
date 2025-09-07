@@ -2,7 +2,7 @@ package com.algalopez.kirjavik.backoffice_app.user.application.update_user;
 
 import com.algalopez.kirjavik.backoffice_app.user.domain.event.UserUpdated;
 import com.algalopez.kirjavik.backoffice_app.user.domain.model.User;
-import com.algalopez.kirjavik.shared.application.EventBusPort;
+import com.algalopez.kirjavik.backoffice_app.shared.domain.port.EventBusPort;
 import com.algalopez.kirjavik.shared.domain.service.DomainMetadataService;
 import jakarta.enterprise.context.ApplicationScoped;
 import lombok.RequiredArgsConstructor;

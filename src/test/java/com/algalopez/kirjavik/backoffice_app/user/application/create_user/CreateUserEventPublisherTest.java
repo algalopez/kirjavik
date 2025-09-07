@@ -3,7 +3,7 @@ package com.algalopez.kirjavik.backoffice_app.user.application.create_user;
 import com.algalopez.kirjavik.backoffice_app.user.domain.event.UserCreated;
 import com.algalopez.kirjavik.backoffice_app.user.domain.model.User;
 import com.algalopez.kirjavik.backoffice_app.user.domain.model.UserMother;
-import com.algalopez.kirjavik.shared.application.EventBusPort;
+import com.algalopez.kirjavik.backoffice_app.shared.domain.port.EventBusPort;
 import com.algalopez.kirjavik.shared.domain.port.DateTimeProviderPort;
 import com.algalopez.kirjavik.shared.domain.port.UuidProviderPort;
 import com.algalopez.kirjavik.shared.domain.service.DomainMetadataService;
