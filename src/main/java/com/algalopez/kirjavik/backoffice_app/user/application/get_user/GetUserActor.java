@@ -15,7 +15,7 @@ public class GetUserActor {
   private final UserViewRepositoryPort userViewRepository;
 
   public GetUserResponse query(GetUserQuery query) {
-    UUID id = UUID.fromString(query.getId());
+    UUID id = UUID.fromString(query.id());
     UserView user = userViewRepository.findById(id);
     if (user == null) {
       throw new UserNotFoundException("User " + id + " does not exist");

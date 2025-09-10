@@ -1,4 +1,4 @@
-package com.algalopez.kirjavik.havn_app.shared.infrastructure.arch;
+package com.algalopez.kirjavik.backoffice_app.shared.infrastructure.arch;
 
 import com.tngtech.archunit.base.DescribedPredicate;
 import com.tngtech.archunit.core.domain.JavaClass;
@@ -13,13 +13,13 @@ import org.junit.jupiter.api.Test;
 class ModuleDependencyRulesArchTest {
 
   private static final JavaClasses CLASSES =
-      new ClassFileImporter().importPackages("com.algalopez.kirjavik.havn_app");
+      new ClassFileImporter().importPackages("com.algalopez.kirjavik.backoffice_app");
 
   @Test
   void modules_shouldHaveNoCyclicDependencies() {
     SliceRule sliceRule =
         SlicesRuleDefinition.slices()
-            .matching("..kirjavik.havn_app.(*)..")
+            .matching("..kirjavik.backoffice_app.(*)..")
             .should()
             .beFreeOfCycles();
 
@@ -30,13 +30,13 @@ class ModuleDependencyRulesArchTest {
   void sharedModule_shouldNotAccessOtherModules() {
     DescribedPredicate<JavaClass> sharedModuleAccessAllowed =
         JavaClass.Predicates.resideOutsideOfPackages("..kirjavik..") // sdk classes, libraries, etc
-            .or(JavaClass.Predicates.resideInAnyPackage("..kirjavik.havn_app.shared.."))
+            .or(JavaClass.Predicates.resideInAnyPackage("..kirjavik.backoffice_app.shared.."))
             .or(JavaClass.Predicates.resideInAnyPackage("..kirjavik.shared.."));
 
     ArchRule rule =
         ArchRuleDefinition.classes()
             .that()
-            .resideInAnyPackage("..kirjavik.havn_app.shared..")
+            .resideInAnyPackage("..kirjavik.backoffice_app.shared..")
             .should()
             .onlyAccessClassesThat(sharedModuleAccessAllowed);
 
@@ -44,20 +44,20 @@ class ModuleDependencyRulesArchTest {
   }
 
   @Test
-  void bookItem_shouldNotAccessOtherModules_exceptSharedOrThoughApi() {
+  void book_shouldNotAccessOtherModules_exceptSharedOrThoughApi() {
     DescribedPredicate<JavaClass> sampleModuleAccessAllowed =
-        JavaClass.Predicates.resideOutsideOfPackages("..kirjavik.havn_app..")
+        JavaClass.Predicates.resideOutsideOfPackages("..kirjavik.backoffice_app..")
             .or(
                 JavaClass.Predicates.resideInAnyPackage(
-                    "..kirjavik.havn_app.book_item..",
-                    "..kirjavik.havn_app.shared..",
+                    "..kirjavik.backoffice_app.book..",
+                    "..kirjavik.backoffice_app.shared..",
                     "..kirjavik.shared..",
-                    "..kirjavik.havn_app.*.api.."));
+                    "..kirjavik.backoffice_app.*.api.."));
 
     ArchRule rule =
         ArchRuleDefinition.classes()
             .that()
-            .resideInAnyPackage("..kirjavik.havn_app.book_item..")
+            .resideInAnyPackage("..kirjavik.backoffice_app.book..")
             .should()
             .onlyAccessClassesThat(sampleModuleAccessAllowed);
 
@@ -65,20 +65,20 @@ class ModuleDependencyRulesArchTest {
   }
 
   @Test
-  void bookReview_shouldNotAccessOtherModules_exceptSharedOrThoughApi() {
+  void user_shouldNotAccessOtherModules_exceptSharedOrThoughApi() {
     DescribedPredicate<JavaClass> sampleModuleAccessAllowed =
-        JavaClass.Predicates.resideOutsideOfPackages("..kirjavik.havn_app..")
+        JavaClass.Predicates.resideOutsideOfPackages("..kirjavik.backoffice_app..")
             .or(
                 JavaClass.Predicates.resideInAnyPackage(
-                    "..kirjavik.havn_app.book_review..",
-                    "..kirjavik.havn_app.shared..",
+                    "..kirjavik.backoffice_app.user..",
+                    "..kirjavik.backoffice_app.shared..",
                     "..kirjavik.shared..",
-                    "..kirjavik.havn_app.*.api.."));
+                    "..kirjavik.backoffice_app.*.api.."));
 
     ArchRule rule =
         ArchRuleDefinition.classes()
             .that()
-            .resideInAnyPackage("..kirjavik.havn_app.book_review..")
+            .resideInAnyPackage("..kirjavik.backoffice_app.user..")
             .should()
             .onlyAccessClassesThat(sampleModuleAccessAllowed);
 

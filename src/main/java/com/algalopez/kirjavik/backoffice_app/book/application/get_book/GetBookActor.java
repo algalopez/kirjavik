@@ -15,7 +15,7 @@ public class GetBookActor {
   private final BookViewRepositoryPort bookViewRepository;
 
   public GetBookResponse query(GetBookQuery query) {
-    UUID id = UUID.fromString(query.getId());
+    UUID id = UUID.fromString(query.id());
     BookView book = bookViewRepository.findById(id);
     if (book == null) {
       throw new BookNotFoundException("Book " + id + " does not exist");
