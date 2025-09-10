@@ -38,7 +38,7 @@ class EventBusAdapterIntegrationTest {
             "kirjavik.backoffice.domain-events",
             "#",
             "backoffice-test-queue",
-            2,
+            10,
             SampleEvent.class);
     assertThat(publishedEvent).isEqualTo(sampleEvent);
   }

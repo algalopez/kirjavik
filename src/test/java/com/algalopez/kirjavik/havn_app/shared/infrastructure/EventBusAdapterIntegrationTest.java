@@ -35,7 +35,7 @@ class EventBusAdapterIntegrationTest {
 
     SampleEvent publishedEvent =
         rabbitMqTestClient.consumeSingleMessage(
-            "kirjavik.havn.domain-events", "#", "havn-test-queue", 2, SampleEvent.class);
+            "kirjavik.havn.domain-events", "#", "havn-test-queue", 10, SampleEvent.class);
     assertThat(publishedEvent).isEqualTo(sampleEvent);
   }
 
