@@ -14,7 +14,7 @@ import lombok.extern.jackson.Jacksonized;
 import org.junit.jupiter.api.Test;
 
 @QuarkusTest
-class EventBusAdapterTest {
+class EventBusAdapterIntegrationTest {
 
   @Inject EventBusAdapter eventBusAdapter;
   @Inject RabbitMqTestClient rabbitMqTestClient;
@@ -28,14 +28,18 @@ class EventBusAdapterTest {
             .aggregateId("aggregateId")
             .aggregateType("aggregateType")
             .dateTime("dateTime")
-            .payload("payload2")
+            .payload("payload")
             .build();
 
     assertThatNoException().isThrownBy(() -> eventBusAdapter.publish(sampleEvent));
 
     SampleEvent publishedEvent =
         rabbitMqTestClient.consumeSingleMessage(
-            "kirjavik.backoffice.domain-events", "#", "test-queue", 2, SampleEvent.class);
+            "kirjavik.backoffice.domain-events",
+            "#",
+            "backoffice-test-queue",
+            2,
+            SampleEvent.class);
     assertThat(publishedEvent).isEqualTo(sampleEvent);
   }
 
