@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Static Slides</title>
+    <!-- Custom css  -->
+    <link rel="stylesheet" href="index.css">
+    <!-- Reveal.js core CSS -->
+    <link rel="stylesheet" href="reveal/dist/reveal.css">
+    <!-- Optional theme (choose one: beige, black, league, night, serif, simple, sky, solarized, white) -->
+    <link rel="stylesheet" href="reveal/dist/theme/black.css" id="theme">
+
+</head>
+<body>
+<div class="reveal">
+    <div class="slides">
+        <section data-external="slides/introduction.html"></section>
+        <section data-external="slides/the_app.html"></section>
+        <section data-external="slides/the_tech.html"></section>
+        <section data-external="slides/hexagonal.html"></section>
+        <section data-external="slides/testing_strategy.html"></section>
+    </div>
+</div>
+
+<script type="text/javascript" src="index.js"></script>
+<script src="reveal/dist/reveal.js"></script>
+<script src="reveal/plugin/notes/notes.js"></script>
+<script src="reveal/plugin/markdown/markdown.js"></script>
+<script src="reveal/plugin/highlight/highlight.js"></script>
+
+
+<script>
+    async function loadExternalSlides() {
+      const placeholders = document.querySelectorAll("section[data-external]");
+      for (const placeholder of placeholders) {
+        const url = placeholder.getAttribute("data-external");
+        try {
+          const resp = await fetch(url);
+          if (!resp.ok) throw new Error(resp.status);
+          placeholder.innerHTML = await resp.text();
+        } catch (err) {
+          placeholder.innerHTML = `<section><h2 style="color:red">Error loading ${url}</h2></section>`;
+        }
+      }
+    }
+
+    function startReveal() {
+      Reveal.initialize({
+        hash: true,
+        controls: true,
+        progress: true,
+        transition: "fade",
+      });
+    }
+
+    loadExternalSlides().then(startReveal);
+
+
+</script>
+</body>
+</html>
