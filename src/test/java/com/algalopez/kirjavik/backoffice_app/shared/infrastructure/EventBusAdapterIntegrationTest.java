@@ -11,13 +11,28 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 @QuarkusTest
 class EventBusAdapterIntegrationTest {
 
+  private static final String QUEUE_NAME = "backoffice-test-queue";
+  private static final String EXCHANGE_NAME = "kirjavik.backoffice.domain-events";
+
   @Inject EventBusAdapter eventBusAdapter;
   @Inject RabbitMqTestClient rabbitMqTestClient;
+
+  @BeforeEach
+  void setUp() {
+    rabbitMqTestClient.prepareQueue(EXCHANGE_NAME, "#", QUEUE_NAME);
+  }
+
+  @AfterEach
+  void tearDown() {
+    rabbitMqTestClient.deleteQueue(QUEUE_NAME);
+  }
 
   @Test
   void publish() {
@@ -34,12 +49,7 @@ class EventBusAdapterIntegrationTest {
     assertThatNoException().isThrownBy(() -> eventBusAdapter.publish(sampleEvent));
 
     SampleEvent publishedEvent =
-        rabbitMqTestClient.consumeSingleMessage(
-            "kirjavik.backoffice.domain-events",
-            "#",
-            "backoffice-test-queue",
-            10,
-            SampleEvent.class);
+        rabbitMqTestClient.consumeSingleMessage(QUEUE_NAME, 10, SampleEvent.class);
     assertThat(publishedEvent).isEqualTo(sampleEvent);
   }
 

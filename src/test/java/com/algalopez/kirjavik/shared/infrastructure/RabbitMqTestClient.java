@@ -17,6 +17,15 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 @ApplicationScoped
 public class RabbitMqTestClient {
 
+  /*
+  We are creating the queue in one connection, consuming the events in another and deleting the queue in a third one
+  This is to avoid writing the whole test inside one connection or to avoid reusing the same queue for different tests
+  This might change in the future if we find a better way to do it but for now it explains the following constants
+   */
+  private static final boolean NOT_DURABLE = false;
+  private static final boolean NOT_EXCLUSIVE = false;
+  private static final boolean NOT_AUTODELETE = false;
+
   private final ObjectMapper objectMapper;
   private final ConnectionFactory factory;
 
@@ -43,33 +52,25 @@ public class RabbitMqTestClient {
   }
 
   @SneakyThrows
-  public String consumeSingleMessage(
-      String exchange, String routingKey, String queueName, long timeoutSeconds) {
+  public void prepareQueue(String exchange, String routingKey, String queueName) {
     try (Connection conn = factory.newConnection();
         Channel channel = conn.createChannel()) {
-
-      BlockingQueue<String> receivedMessages = new ArrayBlockingQueue<>(1);
-
-      DeliverCallback deliverCallback =
-          (consumerTag, delivery) -> {
-            receivedMessages.add(new String(delivery.getBody(), StandardCharsets.UTF_8));
-          };
-
-      channel.queueDeclare(queueName, false, true, true, null);
+      channel.queueDeclare(queueName, NOT_DURABLE, NOT_EXCLUSIVE, NOT_AUTODELETE, null);
       channel.queueBind(queueName, exchange, routingKey);
-      channel.basicConsume(queueName, true, deliverCallback, consumerTag -> {});
+    }
+  }
 
-      return receivedMessages.poll(timeoutSeconds, TimeUnit.SECONDS);
+  @SneakyThrows
+  public void deleteQueue(String queueName) {
+    try (Connection conn = factory.newConnection();
+        Channel channel = conn.createChannel()) {
+      channel.queueDelete(queueName);
     }
   }
 
   @SneakyThrows
   public <T extends DomainEvent> T consumeSingleMessage(
-      String exchange,
-      String routingKey,
-      String queueName,
-      long timeoutSeconds,
-      Class<T> targetType) {
+      String queueName, long timeoutSeconds, Class<T> targetType) {
     try (Connection conn = factory.newConnection();
         Channel channel = conn.createChannel()) {
 
@@ -80,8 +81,6 @@ public class RabbitMqTestClient {
             receivedMessages.add(new String(delivery.getBody(), StandardCharsets.UTF_8));
           };
 
-      channel.queueDeclare(queueName, false, true, true, null);
-      channel.queueBind(queueName, exchange, routingKey);
       channel.basicConsume(queueName, true, deliverCallback, consumerTag -> {});
 
       String message = receivedMessages.poll(timeoutSeconds, TimeUnit.SECONDS);
