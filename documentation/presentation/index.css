@@ -1,3 +1,6 @@
+body {
+    background-color: #222 !important;
+}
 
 .slide-layout {
   display: grid !important;
@@ -44,6 +47,7 @@
   padding: 10px;
   min-height: 0;
   font-size: 0.6em;
+  padding: 80px;
 }
 
 
@@ -109,4 +113,38 @@
   margin: 0em !important;
   max-height: 100% !important;
   line-height: 0.6;
+}
+
+/* ----------------- Backgrounds ----------------- */
+
+.white-background {
+  background: linear-gradient(to right, #FFFFFF 0px, white 70px, white 100%);
+}
+
+.red-background {
+  background: linear-gradient(to right, #8B0000 0px, white 70px, white 100%);
+}
+
+.orange-background {
+  background: linear-gradient(to right, #CC5500 0px, white 70px, white 100%);
+}
+
+.yellow-background {
+  background: linear-gradient(to right, #B8860B 0px, white 70px, white 100%);
+}
+
+.green-background {
+  background: linear-gradient(to right, #006400 0px, white 70px, white 100%);
+}
+
+.blue-background {
+  background: linear-gradient(to right, #00008B 0px, white 70px, white 100%);
+}
+
+.indigo-background {
+  background: linear-gradient(to right, #4B0082 0px, white 70px, white 100%);
+}
+
+.purple-background {
+  background: linear-gradient(to right, #800080 0px, white 70px, white 100%);
 }

@@ -14,7 +14,7 @@ Run db migrations
 
 `./gradlew migrateBackoffice`  
 `./gradlew migrateKirjavik`  
-`./gradlew migrateStats`  
+`./gradlew migrateStats`
 
 Build the app, run tests and execute sonar
 
@@ -30,8 +30,15 @@ Run app
 
 `./gradlew quarkusDev -Dquarkus.profile=prod`
 
-Open project
+Links
 
-`http://localhost:8080/q/dev-ui/extensions`
+|             |                                     |
+|-------------|-------------------------------------|
+| Quarkus dev | http://localhost:8080/q/dev/        |
+| Swagger     | http://localhost:8080/q/swagger-ui/ |
+| Sonarqube   | http://localhost:34601/             |
+| RabbitMQ    | http://localhost:34607              |
+| KurrentDB   | http://localhost:34605/ui/cluster   |
+| Prometheus  | http://localhost:34603              |
+| Grafana     | http://localhost:34604              |
 
-`http://localhost:8080/q/swagger-ui`
