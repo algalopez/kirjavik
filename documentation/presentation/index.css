@@ -122,29 +122,33 @@ body {
 }
 
 .red-background {
-  background: linear-gradient(to right, #8B0000 0px, white 70px, white 100%);
+  background: linear-gradient(to right, #F28C8C 0px, white 70px, white 100%);
 }
 
 .orange-background {
-  background: linear-gradient(to right, #CC5500 0px, white 70px, white 100%);
+  background: linear-gradient(to right, #F6A66A 0px, white 70px, white 100%);
 }
 
 .yellow-background {
-  background: linear-gradient(to right, #B8860B 0px, white 70px, white 100%);
+  background: linear-gradient(to right, #F5D97D 0px, white 70px, white 100%);
 }
 
 .green-background {
-  background: linear-gradient(to right, #006400 0px, white 70px, white 100%);
+  background: linear-gradient(to right, #90D890 0px, white 70px, white 100%);
+}
+
+.teal-background {
+  background: linear-gradient(to right, #8AD8D1 0px, white 70px, white 100%);
 }
 
 .blue-background {
-  background: linear-gradient(to right, #00008B 0px, white 70px, white 100%);
+  background: linear-gradient(to right, #8CAEF2 0px, white 70px, white 100%);
 }
 
 .indigo-background {
-  background: linear-gradient(to right, #4B0082 0px, white 70px, white 100%);
+  background: linear-gradient(to right, #A293F0 0px, white 70px, white 100%);
 }
 
 .purple-background {
-  background: linear-gradient(to right, #800080 0px, white 70px, white 100%);
+  background: linear-gradient(to right, #D6A2E8 0px, white 70px, white 100%);
 }

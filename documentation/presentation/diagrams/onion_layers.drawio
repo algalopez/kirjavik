@@ -1,0 +1,43 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.2.5 Chrome/138.0.7204.251 Electron/37.6.1 Safari/537.36" version="28.2.5">
+  <diagram name="Page-1" id="dXlJS5lW_3xCTIxXRVe6">
+    <mxGraphModel dx="983" dy="580" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="800" pageHeight="600" background="#ffffff" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="a304g3IQhrcuElOzoZ9--7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="MQjkWoL7lX2tYh4zixMm-1" target="MQjkWoL7lX2tYh4zixMm-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="MQjkWoL7lX2tYh4zixMm-1" value="Infrastructure (Driver)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="80" y="80" width="240" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="a304g3IQhrcuElOzoZ9--6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="MQjkWoL7lX2tYh4zixMm-2" target="MQjkWoL7lX2tYh4zixMm-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="MQjkWoL7lX2tYh4zixMm-2" value="Application" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+          <mxGeometry x="80" y="200" width="240" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="a304g3IQhrcuElOzoZ9--8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="MQjkWoL7lX2tYh4zixMm-3" target="MQjkWoL7lX2tYh4zixMm-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="MQjkWoL7lX2tYh4zixMm-3" value="Domain" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
+          <mxGeometry x="80" y="320" width="240" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="MQjkWoL7lX2tYh4zixMm-4" value="Infrastructure (Driven)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="80" y="440" width="240" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="a304g3IQhrcuElOzoZ9--1" value="Controllers&lt;div&gt;Event listeners&lt;/div&gt;&lt;div&gt;Schedulers&lt;/div&gt;&lt;div&gt;Framework configuration&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="400" y="60" width="300" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="a304g3IQhrcuElOzoZ9--2" value="&lt;div&gt;Use cases&lt;/div&gt;&lt;div&gt;Requests / Responses&lt;/div&gt;&lt;div&gt;Mappers&lt;/div&gt;&lt;div&gt;Orchestration services&lt;/div&gt;&lt;div&gt;Ports&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="400" y="180" width="300" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="a304g3IQhrcuElOzoZ9--3" value="&lt;div&gt;Entities&lt;/div&gt;&lt;div&gt;Value objects&lt;/div&gt;&lt;div&gt;Domain events&lt;/div&gt;&lt;div&gt;Exceptions&lt;/div&gt;&lt;div&gt;Business services&lt;/div&gt;&lt;div&gt;Ports&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="400" y="300" width="300" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="a304g3IQhrcuElOzoZ9--4" value="Adapters&lt;div&gt;Repositories / Daos&lt;/div&gt;&lt;div&gt;Rest / Grpc clients&lt;/div&gt;&lt;div&gt;Event buses&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="400" y="420" width="300" height="110" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
