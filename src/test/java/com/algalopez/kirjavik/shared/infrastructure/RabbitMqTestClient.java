@@ -2,10 +2,7 @@ package com.algalopez.kirjavik.shared.infrastructure;
 
 import com.algalopez.kirjavik.shared.domain.model.DomainEvent;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.ConnectionFactory;
-import com.rabbitmq.client.DeliverCallback;
+import com.rabbitmq.client.*;
 import jakarta.enterprise.context.ApplicationScoped;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -86,6 +83,19 @@ public class RabbitMqTestClient {
       String message = receivedMessages.poll(timeoutSeconds, TimeUnit.SECONDS);
 
       return objectMapper.readValue(message, targetType);
+    }
+  }
+
+  @SneakyThrows
+  public <T extends DomainEvent> void publishMessage(
+      String exchangeName, String routingKey, byte[] jsonBytes) {
+    try (Connection conn = factory.newConnection();
+        Channel channel = conn.createChannel()) {
+
+      AMQP.BasicProperties props =
+          new AMQP.BasicProperties.Builder().contentType("application/json").build();
+
+      channel.basicPublish(exchangeName, routingKey, props, jsonBytes);
     }
   }
 }
