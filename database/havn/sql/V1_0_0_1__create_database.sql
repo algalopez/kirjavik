@@ -25,3 +25,14 @@ CREATE TABLE IF NOT EXISTS `user_projection` (
     `name` VARCHAR(255) NOT NULL,
     `email` VARCHAR(255) NOT NULL UNIQUE
 );
+
+CREATE TABLE IF NOT EXISTS `book_item_projection` (
+    `id` CHAR(36) PRIMARY KEY,
+    `book_id` CHAR(36) NOT NULL,
+    `user_id` CHAR(36) NOT NULL,
+    `status` INT NOT NULL,
+    `review_count` INT DEFAULT 0,
+    `review_score` DECIMAL(5,2) DEFAULT 0.0,
+    `created_at` DATETIME NOT NULL,
+    `updated_at` DATETIME NOT NULL
+);
