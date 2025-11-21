@@ -1,5 +1,6 @@
 package com.algalopez.kirjavik.havn_app.book_item.application.return_book_item;
 
+import com.algalopez.kirjavik.backoffice_app.shared.domain.port.EventBusPort;
 import com.algalopez.kirjavik.havn_app.book_item.domain.event.BookItemDomainEvent;
 import com.algalopez.kirjavik.havn_app.book_item.domain.event.BookItemReturned;
 import com.algalopez.kirjavik.havn_app.book_item.domain.model.BookItem;
@@ -17,6 +18,7 @@ public class ReturnBookItemActor {
   private final BookItemReplayService bookItemReplayService;
   private final ReturnBookItemMapper returnBookItemMapper;
   private final BookItemRepositoryPort bookItemRepository;
+  private final EventBusPort eventBusPort;
 
   public void command(ReturnBookItemCommand command) {
     ensureValidUser(command.userId());
@@ -28,6 +30,8 @@ public class ReturnBookItemActor {
     ensureValidState(bookItemEvents);
     var lastEvent = bookItemEvents.getLast().getEventId();
     bookItemRepository.storeBookItemReturnedEvent(lastEvent, bookItemReturned);
+
+    eventBusPort.publish(bookItemReturned);
   }
 
   private void ensureValidUser(String userId) {
@@ -46,7 +50,8 @@ public class ReturnBookItemActor {
     BookItem bookItem = bookItemReplayService.replay(bookItemEvents);
 
     if (!BookItemStatus.BORROWED.equals(bookItem.getStatus())) {
-      throw new IllegalArgumentException("The book must be BORROWED to return it, but is " + bookItem.getStatus());
+      throw new IllegalArgumentException(
+          "The book must be BORROWED to return it, but is " + bookItem.getStatus());
     }
   }
 }

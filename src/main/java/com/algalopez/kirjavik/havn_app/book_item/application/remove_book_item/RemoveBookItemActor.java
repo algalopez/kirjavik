@@ -1,5 +1,6 @@
 package com.algalopez.kirjavik.havn_app.book_item.application.remove_book_item;
 
+import com.algalopez.kirjavik.backoffice_app.shared.domain.port.EventBusPort;
 import com.algalopez.kirjavik.havn_app.book_item.domain.event.BookItemDomainEvent;
 import com.algalopez.kirjavik.havn_app.book_item.domain.event.BookItemRemoved;
 import com.algalopez.kirjavik.havn_app.book_item.domain.model.BookItem;
@@ -17,6 +18,7 @@ public class RemoveBookItemActor {
   private final BookItemReplayService bookItemReplayService;
   private final RemoveBookItemMapper addBookItemMapper;
   private final BookItemRepositoryPort bookItemRepository;
+  private final EventBusPort eventBusPort;
 
   public void command(RemoveBookItemCommand command) {
     ensureValidUser(command.userId());
@@ -28,6 +30,8 @@ public class RemoveBookItemActor {
     ensureValidState(bookItemEvents);
     var lastEvent = bookItemEvents.getLast().getEventId();
     bookItemRepository.storeBookItemRemovedEvent(lastEvent, bookItemRemoved);
+
+    eventBusPort.publish(bookItemRemoved);
   }
 
   private void ensureValidUser(String userId) {

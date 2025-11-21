@@ -2,8 +2,10 @@ package com.algalopez.kirjavik.havn_app.book_item.application.add_book_item;
 
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
+import com.algalopez.kirjavik.backoffice_app.shared.domain.port.EventBusPort;
 import com.algalopez.kirjavik.havn_app.book_item.domain.event.BookItemAdded;
 import com.algalopez.kirjavik.havn_app.book_item.domain.event.BookItemAddedMother;
+import com.algalopez.kirjavik.havn_app.book_item.domain.event.BookItemBorrowed;
 import com.algalopez.kirjavik.havn_app.book_item.domain.port.BookItemRepositoryPort;
 import com.algalopez.kirjavik.shared.domain.service.DomainMetadataService;
 import java.util.List;
@@ -19,6 +21,7 @@ import org.mockito.Mockito;
 class AddBookItemActorTest {
 
   private BookItemRepositoryPort bookItemRepository;
+  private EventBusPort eventBusPort;
   private AddBookItemActor addBookItemActor;
 
   @BeforeEach
@@ -27,7 +30,8 @@ class AddBookItemActorTest {
     DomainMetadataService domainMetadataService = Mockito.mock(DomainMetadataService.class);
     AddBookItemMapper addBookItemMapper = Mappers.getMapper(AddBookItemMapper.class);
     addBookItemMapper.domainMetadataService = domainMetadataService;
-    addBookItemActor = new AddBookItemActor(addBookItemMapper, bookItemRepository);
+    eventBusPort = Mockito.mock(EventBusPort.class);
+    addBookItemActor = new AddBookItemActor(addBookItemMapper, bookItemRepository, eventBusPort);
 
     Mockito.when(domainMetadataService.generateEventDateTime()).thenReturn("2025-01-02T03:04:05");
     Mockito.when(domainMetadataService.generateEventId())
@@ -48,6 +52,8 @@ class AddBookItemActorTest {
     addBookItemActor.command(command);
 
     Mockito.verify(bookItemRepository).storeBookItemAddedEvent(Mockito.any(BookItemAdded.class));
+
+    Mockito.verify(eventBusPort).publish(Mockito.any(BookItemBorrowed.class));
   }
 
   @MethodSource("command_whenInvalidRequest_source")

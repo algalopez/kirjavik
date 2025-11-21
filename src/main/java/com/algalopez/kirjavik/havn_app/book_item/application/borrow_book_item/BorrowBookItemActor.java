@@ -1,5 +1,6 @@
 package com.algalopez.kirjavik.havn_app.book_item.application.borrow_book_item;
 
+import com.algalopez.kirjavik.backoffice_app.shared.domain.port.EventBusPort;
 import com.algalopez.kirjavik.havn_app.book_item.domain.event.BookItemBorrowed;
 import com.algalopez.kirjavik.havn_app.book_item.domain.event.BookItemDomainEvent;
 import com.algalopez.kirjavik.havn_app.book_item.domain.model.BookItem;
@@ -17,6 +18,7 @@ public class BorrowBookItemActor {
   private final BookItemReplayService bookItemReplayService;
   private final BorrowBookItemMapper borrowBookItemMapper;
   private final BookItemRepositoryPort bookItemRepository;
+  private final EventBusPort eventBusPort;
 
   public void command(BorrowBookItemCommand command) {
     ensureValidUser(command.userId());
@@ -28,6 +30,8 @@ public class BorrowBookItemActor {
     ensureValidState(bookItemEvents);
     var lastEvent = bookItemEvents.getLast().getEventId();
     bookItemRepository.storeBookItemBorrowedEvent(lastEvent, bookItemBorrowed);
+
+    eventBusPort.publish(bookItemBorrowed);
   }
 
   private void ensureValidUser(String userId) {

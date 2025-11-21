@@ -2,7 +2,9 @@ package com.algalopez.kirjavik.havn_app.book_item.application.remove_book_item;
 
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
+import com.algalopez.kirjavik.backoffice_app.shared.domain.port.EventBusPort;
 import com.algalopez.kirjavik.havn_app.book_item.domain.event.BookItemAddedMother;
+import com.algalopez.kirjavik.havn_app.book_item.domain.event.BookItemBorrowed;
 import com.algalopez.kirjavik.havn_app.book_item.domain.event.BookItemBorrowedMother;
 import com.algalopez.kirjavik.havn_app.book_item.domain.event.BookItemRemoved;
 import com.algalopez.kirjavik.havn_app.book_item.domain.port.BookItemRepositoryPort;
@@ -21,6 +23,7 @@ import org.mockito.Mockito;
 class RemoveBookItemActorTest {
 
   private BookItemRepositoryPort bookItemRepository;
+  private EventBusPort eventBusPort;
   private RemoveBookItemActor removeBookItemActor;
 
   @BeforeEach
@@ -30,8 +33,10 @@ class RemoveBookItemActorTest {
     DomainMetadataService domainMetadataService = Mockito.mock(DomainMetadataService.class);
     RemoveBookItemMapper removeBookItemMapper = Mappers.getMapper(RemoveBookItemMapper.class);
     removeBookItemMapper.domainMetadataService = domainMetadataService;
+    eventBusPort = Mockito.mock(EventBusPort.class);
     removeBookItemActor =
-        new RemoveBookItemActor(bookItemReplayService, removeBookItemMapper, bookItemRepository);
+        new RemoveBookItemActor(
+            bookItemReplayService, removeBookItemMapper, bookItemRepository, eventBusPort);
 
     Mockito.when(domainMetadataService.generateEventDateTime()).thenReturn("2025-01-02T03:04:05");
     Mockito.when(domainMetadataService.generateEventId())
@@ -53,6 +58,8 @@ class RemoveBookItemActorTest {
 
     Mockito.verify(bookItemRepository)
         .storeBookItemRemovedEvent(Mockito.anyString(), Mockito.any(BookItemRemoved.class));
+
+    Mockito.verify(eventBusPort).publish(Mockito.any(BookItemBorrowed.class));
   }
 
   @MethodSource("command_whenInvalidRequest_source")

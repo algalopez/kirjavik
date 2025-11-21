@@ -1,5 +1,6 @@
 package com.algalopez.kirjavik.havn_app.book_item.application.add_book_item;
 
+import com.algalopez.kirjavik.backoffice_app.shared.domain.port.EventBusPort;
 import com.algalopez.kirjavik.havn_app.book_item.domain.event.BookItemAdded;
 import com.algalopez.kirjavik.havn_app.book_item.domain.event.BookItemDomainEvent;
 import com.algalopez.kirjavik.havn_app.book_item.domain.port.BookItemRepositoryPort;
@@ -13,6 +14,7 @@ public class AddBookItemActor {
 
   private final AddBookItemMapper addBookItemMapper;
   private final BookItemRepositoryPort bookItemRepository;
+  private final EventBusPort eventBusPort;
 
   public void command(AddBookItemCommand command) {
     ensureValidUser(command.userId());
@@ -23,6 +25,8 @@ public class AddBookItemActor {
         bookItemRepository.findBookItemEventsById(command.bookId());
     ensureFirstEvent(bookItemEvents);
     bookItemRepository.storeBookItemAddedEvent(bookItemAdded);
+
+    eventBusPort.publish(bookItemAdded);
   }
 
   private void ensureValidUser(String userId) {
