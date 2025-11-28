@@ -27,7 +27,7 @@ public class BookItemProjectionMother {
     bookId = UUID.fromString(faker.internet().uuidv7());
     userId = UUID.fromString(faker.internet().uuidv7());
     status = faker.options().option(BookItemStatus.class);
-    reviewCount = faker.number().numberBetween(0, 100);
+    reviewCount = faker.number().numberBetween(0, 100000);
     reviewScore = BigDecimal.valueOf(faker.number().randomDouble(1, 0, 10));
     createdAt =
         faker.timeAndDate().past(10L, TimeUnit.DAYS).atOffset(ZoneOffset.UTC).toLocalDateTime();

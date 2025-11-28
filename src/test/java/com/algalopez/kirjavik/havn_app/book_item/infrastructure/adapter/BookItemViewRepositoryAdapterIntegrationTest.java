@@ -19,6 +19,7 @@ import java.util.UUID;
 import lombok.SneakyThrows;
 import org.assertj.core.api.AbstractAssert;
 import org.hibernate.query.NativeQuery;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 @QuarkusTest
@@ -29,6 +30,12 @@ class BookItemViewRepositoryAdapterIntegrationTest {
   EntityManager entityManager;
 
   @Inject BookItemViewRepositoryAdapter bookItemViewRepositoryAdapter;
+
+  @Transactional
+  @AfterEach
+  void tearDown() {
+    entityManager.createNativeQuery("TRUNCATE TABLE book_item_projection").executeUpdate();
+  }
 
   @Test
   void createBookItemView() {
@@ -45,7 +52,7 @@ class BookItemViewRepositoryAdapterIntegrationTest {
                 .userId(UUID.fromString(bookItemAdded.getUserId()))
                 .status(BookItemStatus.AVAILABLE)
                 .reviewCount(0)
-                .reviewScore(BigDecimal.ZERO)
+                .reviewScore(new BigDecimal("0.00"))
                 .createdAt(
                     LocalDateTime.parse(
                         bookItemAdded.getDateTime(), DateTimeFormatter.ISO_LOCAL_DATE_TIME))
@@ -147,7 +154,7 @@ class BookItemViewRepositoryAdapterIntegrationTest {
   void givenAnExistingBookItem(BookItemProjection bookItem) {
     entityManager
         .createNativeQuery(
-            "INSERT INTO book (`id`, `book_id`, `user_id`, `status`, `review_count`, `review_score`, `created_at`, `updated_at`) VALUES (:id, :bookId, :userId, :status, :reviewCount, :reviewScore, :createdAt, :updatedAt)")
+            "INSERT INTO book_item_projection (`id`, `book_id`, `user_id`, `status`, `review_count`, `review_score`, `created_at`, `updated_at`) VALUES (:id, :bookId, :userId, :status, :reviewCount, :reviewScore, :createdAt, :updatedAt)")
         .setParameter("id", bookItem.id().toString())
         .setParameter("bookId", bookItem.bookId().toString())
         .setParameter("userId", bookItem.userId().toString())

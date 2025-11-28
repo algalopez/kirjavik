@@ -13,7 +13,7 @@ Start the environment
 Run db migrations
 
 `./gradlew migrateBackoffice`  
-`./gradlew migrateKirjavik`  
+`./gradlew migrateHavn`  
 `./gradlew migrateStats`
 
 Build the app, run tests and execute sonar

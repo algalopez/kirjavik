@@ -29,10 +29,13 @@ public class BookItemViewRepositoryAdapter implements BookItemViewRepositoryPort
     this.entityManager = entityManager;
   }
 
+  @Transactional
   @Override
   public void createBookItemView(BookItemAdded bookItemAdded) {
     String sqlString =
-        "INSERT INTO book (`id`, `book_id`, `user_id`, `status`, `review_count`, `review_score`, `created_at`, `updated_at`) VALUES (:id, :bookId, :userId, :status, :reviewCount, :reviewScore, :createdAt, :updatedAt)";
+        """
+        INSERT INTO book_item_projection (`id`, `book_id`, `user_id`, `status`, `review_count`, `review_score`, `created_at`, `updated_at`) VALUES
+        (:id, :bookId, :userId, :status, :reviewCount, :reviewScore, :createdAt, :updatedAt)""";
     entityManager
         .createNativeQuery(sqlString)
         .setParameter(ID, bookItemAdded.getId())
@@ -50,7 +53,7 @@ public class BookItemViewRepositoryAdapter implements BookItemViewRepositoryPort
   @Override
   public void updateBookItemViewOnBookBorrowed(BookItemBorrowed bookItemBorrowed) {
     String sqlString =
-        "UPDATE book SET `status` = :status, `updated_at` = :updateAt WHERE `id` = :id";
+        "UPDATE book_item_projection SET `status` = :status, `updated_at` = :updatedAt WHERE `id` = :id";
 
     entityManager
         .createNativeQuery(sqlString)
@@ -64,7 +67,7 @@ public class BookItemViewRepositoryAdapter implements BookItemViewRepositoryPort
   @Override
   public void updateBookItemViewOnBookReturned(BookItemReturned bookItemReturned) {
     String sqlString =
-        "UPDATE book SET `status` = :status, `updated_at` = :updateAt WHERE `id` = :id";
+        "UPDATE book_item_projection SET `status` = :status, `updated_at` = :updatedAt WHERE `id` = :id";
 
     entityManager
         .createNativeQuery(sqlString)
@@ -78,7 +81,7 @@ public class BookItemViewRepositoryAdapter implements BookItemViewRepositoryPort
   @Override
   public void updateBookItemViewOnBookRemoved(BookItemRemoved bookItemRemoved) {
     String sqlString =
-        "UPDATE book SET `status` = :status, `updated_at` = :updateAt WHERE `id` = :id";
+        "UPDATE book_item_projection SET `status` = :status, `updated_at` = :updatedAt WHERE `id` = :id";
 
     entityManager
         .createNativeQuery(sqlString)

@@ -2,6 +2,7 @@ package com.algalopez.kirjavik.havn_app.book_item.domain.event;
 
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.concurrent.TimeUnit;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -35,6 +36,7 @@ public class BookItemAddedMother {
             .past(1, TimeUnit.DAYS)
             .atOffset(ZoneOffset.UTC)
             .toLocalDateTime()
+            .truncatedTo(ChronoUnit.SECONDS)
             .format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
   }
 
